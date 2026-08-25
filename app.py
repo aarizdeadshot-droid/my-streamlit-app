@@ -8,3 +8,5 @@ if "game_started" not in st.session_state:
     st.session_state.game_started = False
 
 st.title("🎮 The Aariz Game")
+st.write("Enter your name")
+name=input()
