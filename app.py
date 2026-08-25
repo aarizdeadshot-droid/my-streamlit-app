@@ -1,4 +1,4 @@
-print("a game developed by Aariz")
+st.write("a game developed by Aariz")
 print("welcome to person interview game")
 print("what is your name")
 name = input()
