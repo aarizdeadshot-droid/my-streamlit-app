@@ -1,191 +1,231 @@
 import streamlit as st
 
 # Configure wide layout 
-st.set_page_config(page_title="400 FPS Python Game", page_icon="⚡", layout="wide")
+st.set_page_config(page_title="Python Geometry Dash", page_icon="🔺", layout="centered")
 
-st.title("⚡ Ultra-Performance 2D Space Evader")
-st.write("Built with a high-speed rendering loop to maximize framerate performance.")
+st.title("🔺 Geometry Dash Sandbox")
+st.write("Click anywhere inside the game area or press **SPACEBAR / UP ARROW** to jump over spikes!")
 
-# Embedded HTML5 High-FPS Game Module
+# Embedded HTML5/Javascript High-Speed Platformer Engine
 game_html = """
 <!DOCTYPE html>
 <html>
 <head>
     <style>
-        body { margin: 0; background-color: #ffffff; font-family: sans-serif; text-align: center; }
+        body { margin: 0; background-color: #ffffff; font-family: sans-serif; text-align: center; overflow: hidden; }
         #canvas-container { position: relative; display: inline-block; margin-top: 10px; }
-        canvas { background: #111116; border: 4px solid #222; border-radius: 8px; cursor: none; }
-        #fps-counter { position: absolute; top: 10px; left: 10px; color: #00ffcc; font-family: monospace; font-size: 16px; font-weight: bold; background: rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 4px; }
-        #score-board { position: absolute; top: 10px; right: 10px; color: #ffffff; font-family: monospace; font-size: 16px; font-weight: bold; background: rgba(0,0,0,0.6); padding: 5px 10px; border-radius: 4px; }
+        canvas { background: linear-gradient(180deg, #001f3f, #0074D9); border: 4px solid #333; border-radius: 8px; }
+        #ui-layer { position: absolute; top: 15px; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0 20px; font-family: 'Courier New', Courier, monospace; pointer-events: none; }
+        .hud-text { color: #ffffff; font-size: 18px; font-weight: bold; background: rgba(0,0,0,0.5); padding: 5px 12px; border-radius: 4px; text-shadow: 1px 1px 2px #000; }
     </style>
 </head>
 <body>
 
     <div id="canvas-container">
-        <div id="fps-counter">FPS: 0</div>
-        <div id="score-board">SCORE: 0</div>
-        <canvas id="gameCanvas" width="800" height="450"></canvas>
+        <div id="ui-layer">
+            <div id="progress-bar" class="hud-text">PROGRESS: 0%</div>
+            <div id="attempt-counter" class="hud-text">ATTEMPT: 1</div>
+        </div>
+        <canvas id="gameCanvas" width="800" height="400"></canvas>
     </div>
 
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
-        const fpsCounter = document.getElementById("fps-counter");
-        const scoreBoard = document.getElementById("score-board");
+        const progressElement = document.getElementById("progress-bar");
+        const attemptElement = document.getElementById("attempt-counter");
 
-        // --- GAME VARIABLES ---
-        let score = 0;
+        // --- GAME PARAMETERS ---
+        const GROUND_Y = 320;
+        let attempt = 1;
         let gameOver = false;
+        let totalDistance = 10000; // Total length of the level track
+        let distanceTraveled = 0;
+
+        // Player properties (The Cube)
+        const player = {
+            x: 150,
+            y: GROUND_Y - 30,
+            size: 30,
+            vy: 0,
+            gravity: 1.2,
+            jumpForce: -16,
+            isGrounded: true,
+            rotation: 0
+        };
+
+        // Obstacles data array (Spikes)
+        let obstacles = [];
         
-        // Player setup (Spaceship)
-        const player = { x: 100, y: 225, radius: 15, speed: 6, targetY: 225 };
-        
-        // Obstacles array (Asteroids)
-        const obstacles = [];
-        const maxObstacles = 8;
-        
-        // Stars background system for depth
-        const stars = [];
-        for(let i=0; i<40; i++) {
-            stars.push({ x: Math.random() * canvas.width, y: Math.random() * canvas.height, size: Math.random() * 2, speed: Math.random() * 2 + 1 });
+        // Populate level with procedural spike distribution mapping
+        function initLevel() {
+            obstacles = [];
+            distanceTraveled = 0;
+            gameOver = false;
+            
+            // Spawn spikes progressively across the custom horizontal matrix
+            let nextSpawnX = 600;
+            while (nextSpawnX < totalDistance) {
+                // Randomize spacing intervals between obstacles
+                nextSpawnX += Math.floor(Math.random() * 300) + 350;
+                
+                // Randomly decide if it's a single spike (1) or double spike (2)
+                let type = Math.random() > 0.7 ? 2 : 1;
+                obstacles.push({ x: nextSpawnX, type: type, width: 30, height: 30 });
+            }
         }
 
-        // --- FPS CALCULATION VECTOR ---
-        let lastCalledTime;
-        let fpsPool = [];
+        // --- HANDLE INPUT EVENTS ---
+        function triggerJump() {
+            if (player.isGrounded && !gameOver) {
+                player.vy = player.jumpForce;
+                player.isGrounded = false;
+            }
+            if (gameOver) {
+                attempt++;
+                attemptElement.innerText = "ATTEMPT: " + attempt;
+                initLevel();
+                player.y = GROUND_Y - player.size;
+                player.vy = 0;
+                player.rotation = 0;
+                player.isGrounded = true;
+            }
+        }
 
-        // Track Mouse Input Movement
-        canvas.addEventListener("mousemove", (e) => {
-            const rect = canvas.getBoundingClientRect();
-            player.targetY = e.clientY - rect.top;
+        // Listeners for keyboard controls
+        window.addEventListener("keydown", (e) => {
+            if (e.key === " " || e.key === "ArrowUp") {
+                e.preventDefault(); // Stop webpage from shifting down
+                triggerJump();
+            }
         });
 
-        // Initialize/Reset obstacles
-        function spawnObstacle(obj = {}) {
-            obj.x = canvas.width + Math.random() * 300;
-            obj.y = Math.random() * (canvas.height - 40) + 20;
-            obj.radius = Math.random() * 15 + 10;
-            obj.speed = Math.random() * 4 + 4 + (score * 0.05); // Speed increases with score
-            return obj;
-        }
+        // Click or tap directly inside the map area
+        canvas.addEventListener("mousedown", (e) => {
+            triggerJump();
+        });
 
-        for(let i=0; i<maxObstacles; i++) {
-            obstacles.push(spawnObstacle({}));
-        }
+        // Initialize Level Sequence
+        initLevel();
 
-        // --- MAIN ENGINE ENGINE LOOP ---
-        function engineLoop() {
-            // 1. Calculate Frame Rate Delta
-            if(!lastCalledTime) {
-                lastCalledTime = performance.now();
-            } else {
-                let delta = (performance.now() - lastCalledTime)/1000;
-                lastCalledTime = performance.now();
-                let currentFps = Math.round(1/delta);
-                
-                // Average the FPS across 10 frames to avoid sudden jumping metrics
-                fpsPool.push(currentFps);
-                if(fpsPool.length > 10) fpsPool.shift();
-                let avgFps = Math.round(fpsPool.reduce((a,b) => a+b) / fpsPool.length);
-                fpsCounter.innerText = "FPS: " + avgFps;
-            }
-
-            // 2. Clear Screen Context
+        // --- MAIN GEOMETRY ENGINE TIMESTEP LOOP ---
+        function gameLoop() {
+            // 1. Clear Screen Canvas Frame
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 3. Draw Background Space Stars
-            ctx.fillStyle = "#ffffff";
-            stars.forEach(star => {
+            // 2. Draw Scrolling Background Matrix Grid Pattern
+            ctx.strokeStyle = "rgba(255,255,255,0.07)";
+            ctx.lineWidth = 2;
+            let gridOffset = distanceTraveled % 40;
+            for (let x = -gridOffset; x < canvas.width; x += 40) {
                 ctx.beginPath();
-                ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-                ctx.fill();
-                if(!gameOver) {
-                    star.x -= star.speed;
-                    if(star.x < 0) star.x = canvas.width;
-                }
-            });
+                ctx.moveTo(x, 0);
+                ctx.lineTo(x, GROUND_Y);
+                ctx.stroke();
+            }
+
+            // 3. Draw Ground Line As Asphault Layout Barrier
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(0, GROUND_Y, canvas.width, canvas.height - GROUND_Y);
+            ctx.fillStyle = "#00ffcc";
+            ctx.fillRect(0, GROUND_Y, canvas.width, 4); // Glowing green neon baseline border
 
             if (!gameOver) {
-                // 4. Update Player Physics Position
-                let dy = player.targetY - player.y;
-                player.y += dy * 0.15; // Smooth interpolation movement lag
+                // 4. Update Game Speeds and Track Advancements
+                let gameSpeed = 7.5; 
+                distanceTraveled += gameSpeed;
 
-                // 5. Draw Player Vector (Neon Jet)
-                ctx.fillStyle = "#00ffcc";
-                ctx.shadowBlur = 10;
-                ctx.shadowColor = "#00ffcc";
-                ctx.beginPath();
-                ctx.moveTo(player.x + 20, player.y);
-                ctx.lineTo(player.x - 15, player.y - 12);
-                ctx.lineTo(player.x - 15, player.y + 12);
-                ctx.closePath();
-                ctx.fill();
-                ctx.shadowBlur = 0; // Reset shadow blur immediately
+                // Update Level Progression Readout HUD percentage updates
+                let progressPercent = Math.min(100, Math.floor((distanceTraveled / totalDistance) * 100));
+                progressElement.innerText = "PROGRESS: " + progressPercent + "%";
 
-                // 6. Move and Draw Obstacles (Asteroids)
-                ctx.fillStyle = "#ff3366";
-                obstacles.forEach(obs => {
-                    obs.x -= obs.speed;
+                if (progressPercent >= 100) {
+                    gameOver = true; // Win condition parameters matching track layout endpoints
+                }
 
-                    // Draw Asteroid
-                    ctx.beginPath();
-                    ctx.arc(obs.x, obs.y, obs.radius, 0, Math.PI * 2);
-                    ctx.fill();
+                // 5. Update Player Vertical Velocity Physics Mechanics 
+                player.vy += player.gravity;
+                player.y += player.vy;
 
-                    // Collision Detection (Circle Overlap Formula)
-                    let distDX = player.x - obs.x;
-                    let distDY = player.y - obs.y;
-                    let totalDistance = Math.sqrt(distDX * distDX + distDY * distDY);
+                // Ground Collision bounds checking
+                if (player.y >= GROUND_Y - player.size) {
+                    player.y = GROUND_Y - player.size;
+                    player.vy = 0;
+                    player.isGrounded = true;
+                    
+                    // Snap rotation alignment flush onto ground when landed safely
+                    player.rotation = Math.round(player.rotation / (Math.PI / 2)) * (Math.PI / 2);
+                } else {
+                    // Continuously spin character cube asset clockwise mid-air during jump frames
+                    player.rotation += 0.08;
+                }
 
-                    if (totalDistance < player.radius + obs.radius) {
-                        gameOver = true;
-                    }
+                // 6. Move & Draw Spikes + Handle Precise Collision Checks
+                ctx.fillStyle = "#FF4136"; // Neon Red sharp spike hazards color
+                ctx.strokeStyle = "#FFFFFF";
+                ctx.lineWidth = 1.5;
 
-                    // Recycle out of bounds obstacles
-                    if (obs.x + obs.radius < 0) {
-                        spawnObstacle(obs);
-                        score += 10;
-                        scoreBoard.innerText = "SCORE: " + score;
+                obstacles.forEach(spike => {
+                    // Update relative canvas positions based on horizontal scrolling offsets
+                    let screenX = spike.x - distanceTraveled + player.x;
+
+                    // Only draw visible objects sitting inside standard resolution screens bounds
+                    if (screenX > -100 && screenX < canvas.width + 100) {
+                        for (let count = 0; count < spike.type; count++) {
+                            let currentSpikeX = screenX + (count * 28);
+                            
+                            // Vector geometry drawing commands for drawing sharp triangles
+                            ctx.beginPath();
+                            ctx.moveTo(currentSpikeX, GROUND_Y);
+                            ctx.lineTo(currentSpikeX + spike.width / 2, GROUND_Y - spike.height);
+                            ctx.lineTo(currentSpikeX + spike.width, GROUND_Y);
+                            ctx.closePath();
+                            ctx.fill();
+                            ctx.stroke();
+
+                            // Triangle-to-Box bounding overlap checks
+                            let boxLeft = player.x;
+                            let boxRight = player.x + player.size;
+                            let boxTop = player.y;
+                            let boxBottom = player.y + player.size;
+
+                            let spikeLeft = currentSpikeX + 4; // Padding cushion to ensure fair hitboxes
+                            let spikeRight = currentSpikeX + spike.width - 4;
+                            let spikeTop = GROUND_Y - spike.height + 4;
+
+                            if (boxRight > spikeLeft && boxLeft < spikeRight && boxBottom > spikeTop) {
+                                gameOver = true; // Crash detected!
+                            }
+                        }
                     }
                 });
+
+                // 7. Render Character Icon (The Cube Matrix Object Canvas Transformations)
+                ctx.save();
+                ctx.translate(player.x + player.size / 2, player.y + player.size / 2);
+                ctx.rotate(player.rotation);
+
+                // Draw Neon Outer Box face mapping profile shell
+                ctx.fillStyle = "#FFDC00"; // Signature bright yellow look
+                ctx.fillRect(-player.size / 2, -player.size / 2, player.size, player.size);
+                
+                // Draw inner detailing structural squares inside the cube face
+                ctx.strokeStyle = "#001f3f";
+                ctx.lineWidth = 3;
+                ctx.strokeRect(-player.size / 2 + 4, -player.size / 2 + 4, player.size - 8, player.size - 8);
+                
+                // Tiny decorative square eyes inside face vectors
+                ctx.fillStyle = "#001f3f";
+                ctx.fillRect(-8, -8, 5, 5);
+                ctx.fillRect(3, -8, 5, 5);
+                
+                ctx.restore();
+
             } else {
-                // Game Over Screen Draw
-                ctx.fillStyle = "rgba(0,0,0,0.8)";
+                // --- GAME OVER OR WIN DISPLAY SCREENS OVERLAYS ---
+                ctx.fillStyle = "rgba(0,0,0,0.75)";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
-                
-                ctx.fillStyle = "#ff3366";
-                ctx.font = "bold 40px sans-serif";
-                ctx.fillText("GAME OVER", canvas.width/2 - 120, canvas.height/2 - 10);
-                
-                ctx.fillStyle = "#ffffff";
-                ctx.font = "20px sans-serif";
-                ctx.fillText("Final Score: " + score, canvas.width/2 - 60, canvas.height/2 + 30);
-                ctx.fillText("Click anywhere inside map to restart", canvas.width/2 - 160, canvas.height/2 + 70);
-            }
 
-            // Request next hardware frame step instantly
-            requestAnimationFrame(engineLoop);
-        }
+                ctx.font = "bold 36px sans-serif";
+                ctx.textAlign = "center";
 
-        // Restart listener trigger click
-        window.addEventListener("click", () => {
-            if(gameOver) {
-                score = 0;
-                scoreBoard.innerText = "SCORE: " + score;
-                gameOver = false;
-                obstacles.forEach(obs => spawnObstacle(obs));
-                player.y = 225;
-            }
-        });
-
-        // Launch Game Loop Engine
-        engineLoop();
-    </script>
-</body>
-</html>
-"""
-
-# Render HTML game block in Streamlit canvas
-st.components.v1.html(game_html, height=480, scrolling=False)
-
-st.info("💡 **Performance Note:** Make sure your monitor's hardware refresh rate (Hz) and browser settings permit unthrottled frames to watch the counter skyrocket!")
