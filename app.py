@@ -1,6 +1,6 @@
 import streamlit as st
 
-# Configure wide layout 
+# Configure page layout centered
 st.set_page_config(page_title="Python Geometry Dash", page_icon="🔺", layout="centered")
 
 st.title("🔺 Geometry Dash Sandbox")
@@ -12,7 +12,7 @@ game_html = """
 <html>
 <head>
     <style>
-        body { margin: 0; background-color: #ffffff; font-family: sans-serif; text-align: center; overflow: hidden; }
+        body { margin: 0; background-color: #ffffff; text-align: center; overflow: hidden; }
         #canvas-container { position: relative; display: inline-block; margin-top: 10px; }
         canvas { background: linear-gradient(180deg, #001f3f, #0074D9); border: 4px solid #333; border-radius: 8px; }
         #ui-layer { position: absolute; top: 15px; left: 0; right: 0; display: flex; justify-content: space-between; padding: 0 20px; font-family: 'Courier New', Courier, monospace; pointer-events: none; }
