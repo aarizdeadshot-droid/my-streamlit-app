@@ -9,4 +9,4 @@ if "game_started" not in st.session_state:
 
 st.title("🎮 The Aariz Game")
 st.write("What is your name")
-st.write placeholder("...Enter Your Name...")
+placeholder("...Enter Your Name...")
