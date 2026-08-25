@@ -1,1 +1,1 @@
-st.write("Normal text")    # Standard paragraph text
+st.write("Normal text")
