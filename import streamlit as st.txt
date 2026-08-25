@@ -1,0 +1,10 @@
+import streamlit as st
+
+st.set_page_config(page_title="Aariz's Website", page_icon="🚀")
+st.title("Welcome to My Website!")
+st.subheader("Hi, I'm Aariz.")
+st.write("This website is running completely on Python using Streamlit.")
+
+if st.button("Click Me"):
+    st.balloons()
+    st.success("Thanks for testing my app!")
