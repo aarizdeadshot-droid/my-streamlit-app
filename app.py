@@ -69,7 +69,7 @@ game_html = """
 
         const player = {
             x: 180,
-            y: GROUND_Y - 30,
+            y: GROUND_Y - 32,
             size: 32,
             vy: 0,
             gravity: 1.4, 
