@@ -1,1 +1,1 @@
-st.header("POPOP")     # Medium text
+st.write("Normal text")    # Standard paragraph text
