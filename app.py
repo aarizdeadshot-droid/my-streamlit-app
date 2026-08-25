@@ -1,12 +1,10 @@
 import streamlit as st
 
-# Configure page layout centered
 st.set_page_config(page_title="Python Geometry Dash", page_icon="🔺", layout="centered")
 
 st.title("🔺 Geometry Dash Sandbox")
 st.write("Click anywhere inside the game area or press **SPACEBAR / UP ARROW** to jump over spikes!")
 
-# Embedded HTML5/Javascript High-Speed Platformer Engine
 game_html = """
 <!DOCTYPE html>
 <html>
@@ -35,14 +33,12 @@ game_html = """
         const progressElement = document.getElementById("progress-bar");
         const attemptElement = document.getElementById("attempt-counter");
 
-        // --- GAME PARAMETERS ---
         const GROUND_Y = 320;
         let attempt = 1;
         let gameOver = false;
-        let totalDistance = 10000; // Total length of the level track
+        let totalDistance = 10000; 
         let distanceTraveled = 0;
 
-        // Player properties (The Cube)
         const player = {
             x: 150,
             y: GROUND_Y - 30,
@@ -54,28 +50,21 @@ game_html = """
             rotation: 0
         };
 
-        // Obstacles data array (Spikes)
         let obstacles = [];
         
-        // Populate level with procedural spike distribution mapping
         function initLevel() {
             obstacles = [];
             distanceTraveled = 0;
             gameOver = false;
             
-            // Spawn spikes progressively across the custom horizontal matrix
             let nextSpawnX = 600;
             while (nextSpawnX < totalDistance) {
-                // Randomize spacing intervals between obstacles
                 nextSpawnX += Math.floor(Math.random() * 300) + 350;
-                
-                // Randomly decide if it's a single spike (1) or double spike (2)
                 let type = Math.random() > 0.7 ? 2 : 1;
                 obstacles.push({ x: nextSpawnX, type: type, width: 30, height: 30 });
             }
         }
 
-        // --- HANDLE INPUT EVENTS ---
         function triggerJump() {
             if (player.isGrounded && !gameOver) {
                 player.vy = player.jumpForce;
@@ -92,28 +81,22 @@ game_html = """
             }
         }
 
-        // Listeners for keyboard controls
         window.addEventListener("keydown", (e) => {
             if (e.key === " " || e.key === "ArrowUp") {
-                e.preventDefault(); // Stop webpage from shifting down
+                e.preventDefault(); 
                 triggerJump();
             }
         });
 
-        // Click or tap directly inside the map area
         canvas.addEventListener("mousedown", (e) => {
             triggerJump();
         });
 
-        // Initialize Level Sequence
         initLevel();
 
-        // --- MAIN GEOMETRY ENGINE TIMESTEP LOOP ---
         function gameLoop() {
-            // 1. Clear Screen Canvas Frame
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-            // 2. Draw Scrolling Background Matrix Grid Pattern
             ctx.strokeStyle = "rgba(255,255,255,0.07)";
             ctx.lineWidth = 2;
             let gridOffset = distanceTraveled % 40;
@@ -124,57 +107,45 @@ game_html = """
                 ctx.stroke();
             }
 
-            // 3. Draw Ground Line As Asphault Layout Barrier
             ctx.fillStyle = "#000000";
             ctx.fillRect(0, GROUND_Y, canvas.width, canvas.height - GROUND_Y);
             ctx.fillStyle = "#00ffcc";
-            ctx.fillRect(0, GROUND_Y, canvas.width, 4); // Glowing green neon baseline border
+            ctx.fillRect(0, GROUND_Y, canvas.width, 4); 
 
             if (!gameOver) {
-                // 4. Update Game Speeds and Track Advancements
                 let gameSpeed = 7.5; 
                 distanceTraveled += gameSpeed;
 
-                // Update Level Progression Readout HUD percentage updates
                 let progressPercent = Math.min(100, Math.floor((distanceTraveled / totalDistance) * 100));
                 progressElement.innerText = "PROGRESS: " + progressPercent + "%";
 
                 if (progressPercent >= 100) {
-                    gameOver = true; // Win condition parameters matching track layout endpoints
+                    gameOver = true; 
                 }
 
-                // 5. Update Player Vertical Velocity Physics Mechanics 
                 player.vy += player.gravity;
                 player.y += player.vy;
 
-                // Ground Collision bounds checking
                 if (player.y >= GROUND_Y - player.size) {
                     player.y = GROUND_Y - player.size;
                     player.vy = 0;
                     player.isGrounded = true;
-                    
-                    // Snap rotation alignment flush onto ground when landed safely
                     player.rotation = Math.round(player.rotation / (Math.PI / 2)) * (Math.PI / 2);
                 } else {
-                    // Continuously spin character cube asset clockwise mid-air during jump frames
                     player.rotation += 0.08;
                 }
 
-                // 6. Move & Draw Spikes + Handle Precise Collision Checks
-                ctx.fillStyle = "#FF4136"; // Neon Red sharp spike hazards color
+                ctx.fillStyle = "#FF4136"; 
                 ctx.strokeStyle = "#FFFFFF";
                 ctx.lineWidth = 1.5;
 
                 obstacles.forEach(spike => {
-                    // Update relative canvas positions based on horizontal scrolling offsets
                     let screenX = spike.x - distanceTraveled + player.x;
 
-                    // Only draw visible objects sitting inside standard resolution screens bounds
                     if (screenX > -100 && screenX < canvas.width + 100) {
                         for (let count = 0; count < spike.type; count++) {
                             let currentSpikeX = screenX + (count * 28);
                             
-                            // Vector geometry drawing commands for drawing sharp triangles
                             ctx.beginPath();
                             ctx.moveTo(currentSpikeX, GROUND_Y);
                             ctx.lineTo(currentSpikeX + spike.width / 2, GROUND_Y - spike.height);
@@ -183,38 +154,33 @@ game_html = """
                             ctx.fill();
                             ctx.stroke();
 
-                            // Triangle-to-Box bounding overlap checks
                             let boxLeft = player.x;
                             let boxRight = player.x + player.size;
                             let boxTop = player.y;
                             let boxBottom = player.y + player.size;
 
-                            let spikeLeft = currentSpikeX + 4; // Padding cushion to ensure fair hitboxes
+                            let spikeLeft = currentSpikeX + 4; 
                             let spikeRight = currentSpikeX + spike.width - 4;
                             let spikeTop = GROUND_Y - spike.height + 4;
 
                             if (boxRight > spikeLeft && boxLeft < spikeRight && boxBottom > spikeTop) {
-                                gameOver = true; // Crash detected!
+                                gameOver = true; 
                             }
                         }
                     }
                 });
 
-                // 7. Render Character Icon (The Cube Matrix Object Canvas Transformations)
                 ctx.save();
                 ctx.translate(player.x + player.size / 2, player.y + player.size / 2);
                 ctx.rotate(player.rotation);
 
-                // Draw Neon Outer Box face mapping profile shell
-                ctx.fillStyle = "#FFDC00"; // Signature bright yellow look
+                ctx.fillStyle = "#FFDC00"; 
                 ctx.fillRect(-player.size / 2, -player.size / 2, player.size, player.size);
                 
-                // Draw inner detailing structural squares inside the cube face
                 ctx.strokeStyle = "#001f3f";
                 ctx.lineWidth = 3;
                 ctx.strokeRect(-player.size / 2 + 4, -player.size / 2 + 4, player.size - 8, player.size - 8);
                 
-                // Tiny decorative square eyes inside face vectors
                 ctx.fillStyle = "#001f3f";
                 ctx.fillRect(-8, -8, 5, 5);
                 ctx.fillRect(3, -8, 5, 5);
@@ -222,10 +188,34 @@ game_html = """
                 ctx.restore();
 
             } else {
-                // --- GAME OVER OR WIN DISPLAY SCREENS OVERLAYS ---
                 ctx.fillStyle = "rgba(0,0,0,0.75)";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
                 ctx.font = "bold 36px sans-serif";
                 ctx.textAlign = "center";
 
+                if (distanceTraveled >= totalDistance) {
+                    ctx.fillStyle = "#2ECC40"; 
+                    ctx.fillText("🏆 LEVEL COMPLETED!", canvas.width / 2, canvas.height / 2 - 20);
+                    ctx.font = "18px sans-serif";
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillText("You mastered the rhythm! Click to play again.", canvas.width / 2, canvas.height / 2 + 25);
+                } else {
+                    ctx.fillStyle = "#FF4136"; 
+                    ctx.fillText("💥 CRASHED!", canvas.width / 2, canvas.height / 2 - 20);
+                    ctx.font = "18px sans-serif";
+                    ctx.fillStyle = "#ffffff";
+                    ctx.fillText("Click anywhere inside or press SPACEBAR to instantly retry.", canvas.width / 2, canvas.height / 2 + 25);
+                }
+            }
+
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
+</body>
+</html>
+"""
+
+st.components.v1.html(game_html, height=430, scrolling=False)
