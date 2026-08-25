@@ -3,7 +3,7 @@ import streamlit as st
 st.set_page_config(page_title="Python Geometry Dash", page_icon="🔺", layout="centered")
 
 st.title("🔺 Geometry Dash Sandbox")
-st.write("Click anywhere inside the game area or press **SPACEBAR / UP ARROW** to jump over spikes!")
+st.write("Press **SPACEBAR** or click inside the game window area to jump over spikes!")
 
 game_html = """
 <!DOCTYPE html>
@@ -82,7 +82,7 @@ game_html = """
         }
 
         window.addEventListener("keydown", (e) => {
-            if (e.key === " " || e.key === "ArrowUp") {
+            if (e.key === " " || e.code === "Space") {
                 e.preventDefault(); 
                 triggerJump();
             }
@@ -205,7 +205,7 @@ game_html = """
                     ctx.fillText("💥 CRASHED!", canvas.width / 2, canvas.height / 2 - 20);
                     ctx.font = "18px sans-serif";
                     ctx.fillStyle = "#ffffff";
-                    ctx.fillText("Click anywhere inside or press SPACEBAR to instantly retry.", canvas.width / 2, canvas.height / 2 + 25);
+                    ctx.fillText("Click inside or press SPACEBAR to instantly retry.", canvas.width / 2, canvas.height / 2 + 25);
                 }
             }
 
