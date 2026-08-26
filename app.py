@@ -19,7 +19,7 @@ st.header("👤 Step 1: Personal Details")
 col_left, col_right = st.columns(2)
 
 with col_left:
-    full_name = st.text_input("Full Name", placeholder="e.g. Aariz Ahmed")
+    full_name = st.text_input("Full Name", placeholder="e.g. Aariz Bin Azmat")
     age = st.number_input("Age", min_value=5, max_value=100, value=16, step=1)
 
 with col_right:
