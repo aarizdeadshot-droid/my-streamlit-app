@@ -35,14 +35,19 @@ if st.button("Submit Answer"):
     if user_name:
         
         st.success(f"Good,.")
-st.write("In which class do you study")
+import streamlit as st
 
-# Create an interactive text input box
-user_name = st.text_input("Enter:", placeholder="Type here...")
+# Check the URL query to see which view to render
+if "page" not in st.query_params:
+    st.query_params["page"] = "home"
 
-# Create an interactive button
-if st.button("Submit"):
-    if user_name:
-        st.success(f"good,.")
-    else:
-        st.warning("Please enter  first!")
+# Button to switch pages programmatically
+if st.button("Go to Dashboard"):
+    st.query_params["page"] = "dashboard"
+    st.rerun()
+
+# Conditional rendering based on the URL parameter
+if st.query_params["page"] == "home":
+    st.title("Welcome to the Homepage")
+elif st.query_params["page"] == "dashboard":
+    st.title("Welcome to the Dashboard")
