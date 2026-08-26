@@ -185,3 +185,24 @@ with col_next:
     if para_num < 30:
         if st.button("Next Para ➡️"):
             st.info("Use Sidebar select option to step forward instantly!")
+@st.cache_data(show_spinner="Loading Para Text...")
+def fetch_para_data(juz_number):
+    # Primary API Endpoint
+    url_primary = f"https://alquran.cloud{juz_number}/quran-uthmani"
+    # Backup Mirror Endpoint if primary fails
+    url_backup = f"https://islamic.network{juz_number}/quran-uthmani"
+    
+    try:
+        # Try Primary Domain
+        response = requests.get(url_primary, timeout=10, verify=False)
+        if response.status_code == 200:
+            return response.json()["data"]
+    except Exception:
+        try:
+            # Fallback to Mirror Domain if primary is busy
+            response = requests.get(url_backup, timeout=10, verify=False)
+            if response.status_code == 200:
+                return response.json()["data"]
+        except Exception:
+            return None
+    return None
