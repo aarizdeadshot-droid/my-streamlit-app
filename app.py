@@ -8,4 +8,7 @@ if "game_started" not in st.session_state:
     st.session_state.game_started = False
 
 st.title("🎮 The Aariz Game")
- st.write("OPPOLOAQ")
+File "/mount/src/my-streamlit-app/app.py", line 11
+   st.write("OPPOLOAQ")
+  ^
+IndentationError: unexpected indent
