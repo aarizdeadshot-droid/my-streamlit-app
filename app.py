@@ -19,3 +19,5 @@ if st.button("Submit Name"):
 st.write("where do you live")
 # Create an interactive text input box
 user_name = st.text_input("Enter your place:", placeholder="Type here...")
+# Create an interactive button
+if st.button("Submit Name"):
