@@ -35,11 +35,5 @@ if st.button("Submit Answer"):
     if user_name:
         st.success(f"Good,.")
 st.write("In which class do you study")
-# Create an interactive text input box
-user_name = st.text_input("Enter your answer:", placeholder="Type here...")
-
-
-    else:
-        st.warning("Please enter a answer first!")
 
 
