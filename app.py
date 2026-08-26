@@ -1,7 +1,7 @@
 import streamlit as st
 
 # Configure the web page layout
-st.set_page_config(page_title="My Python Web App", page_icon="🐍")
+st.set_page_config(page_title="My Python Introduction Web ", page_icon="🐍")
 
 st.title("Welcome to My Streamlit Web App! 🚀")
 st.write("This interactive interface was built 100% using Python code.")
@@ -34,6 +34,15 @@ user_name = st.text_input("Enter your answer:", placeholder="Type here...")
 if st.button("Submit Answer"):
     if user_name:
         st.success(f"Good,.")
+st.write("In which class do you study")
+# Create an interactive text input box
+user_name = st.text_input("Enter your answer:", placeholder="Type here...")
 
+# Create an interactive button
+if st.button("Submit Place"):
+    if user_name:
+        st.success(f"good")
+    else:
+        st.warning("Please enter a answer first!")
 
 
