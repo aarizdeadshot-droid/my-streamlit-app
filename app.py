@@ -44,23 +44,14 @@ st.markdown("""
         display: inline-block;
     }
 
-    /* Optimized Fullscreen-Ready Video Frame */
     .video-frame {
         border-radius: 12px;
         overflow: hidden;
         border: 1px solid #334155;
         box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
         background-color: #020617;
-        padding: 6px;
+        padding: 10px;
         margin-bottom: 1.5rem;
-        width: 100%;
-    }
-    
-    /* Forces the inner video asset to take 100% width and support native fullscreen scaling */
-    .video-frame video {
-        width: 100% !important;
-        height: auto !important;
-        border-radius: 8px;
     }
     
     /* Sidebar customization */
@@ -142,7 +133,7 @@ if completion_rate == 100:
 
 # 5. VIEW ROUTER: Landing Introduction View
 if selected_key == "Overview":
-    st.markdown('<h1 class="hero-title">Professional Certification in Python Foundations</h1>', unsafe_allow_title_item=True)
+    st.markdown('<h1 class="hero-title">Professional Certification in Python Foundations</h1>', unsafe_allow_html=True)
     st.write("#### Offered in compliance with global micro-learning accessibility criteria.")
     st.markdown("---")
     
@@ -167,10 +158,7 @@ else:
     
     with col_left:
         st.markdown("<h4>📺 High-Fidelity Video Lecture</h4>", unsafe_allow_html=True)
-        st.caption("💡 Tip: Click the square icon at the bottom right corner of the video player to toggle Fullscreen Mode.")
-        
         st.markdown('<div class="video-frame">', unsafe_allow_html=True)
-        # Using native streamlit video module component with clean parameter inputs
         st.video(module["video"])
         st.markdown('</div>', unsafe_allow_html=True)
         
@@ -186,5 +174,5 @@ else:
         st.markdown("<h4>✍️ Module Quiz Assessment</h4>", unsafe_allow_html=True)
         st.caption("Verify understanding to unlock your credit units")
         
-        # Dynamic template placeholder structure for running interactive tests
+        # Inject the unique interactive quiz placeholder snippet mapped to our dynamic prompt text configs
         quizPlaceholder(prompt=module["quiz_prompt"])
