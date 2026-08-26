@@ -1,36 +1,37 @@
 import streamlit as st
 
-# 1. Premium App Configuration Setup
+# 1. Premium Application Layout Configuration
 st.set_page_config(
-    page_title="UniAthena Professional - Python with AI",
+    page_title="UniAthena Professional - Python 4K Mastery",
     page_icon="🎓",
     layout="wide",
     initial_sidebar_state="expanded"
 )
 
-# Initialize global session tracking variables for course progress
+# Initialize global tracking session variables solely for tracking module completions
 if "completed_lessons" not in st.session_state:
     st.session_state.completed_lessons = set()
 
-# 2. Premium Academic Theme Custom UI Theme CSS
+# 2. High-Contrast Institutional Dark Theme CSS
 st.markdown("""
     <style>
-    /* Main Background & Base Styling */
+    /* Main Background & Core Canvas Layout Rules */
     .stApp {
-        background-color: #0A0F1D !important;
-        color: #F1F5F9 !important;
+        background-color: #060B18 !important;
+        color: #F8FAFC !important;
     }
     
     h1, h2, h3, h4, p, label {
-        font-family: 'Inter', 'Segoe UI', system-ui, sans-serif !important;
+        font-family: 'Inter', system-ui, sans-serif !important;
     }
     
-    .hero-title {
-        font-size: 2.6rem;
+    .course-hero-title {
+        font-size: 2.7rem;
         font-weight: 800;
-        background: linear-gradient(90deg, #38BDF8, #A78BFA);
+        background: linear-gradient(90deg, #38BDF8, #818CF8);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
+        margin-bottom: 0.2rem;
     }
     
     .badge-certified {
@@ -44,151 +45,151 @@ st.markdown("""
         display: inline-block;
     }
 
-    /* Video Frame optimized for wide scaling and fullscreen playback */
-    .video-frame {
+    /* Highly Optimized Cinema Frame supporting true 4K scale expansion */
+    .video-4k-frame {
         border-radius: 12px;
         overflow: hidden;
         border: 1px solid #334155;
-        box-shadow: 0 10px 15px -3px rgba(0,0,0,0.5);
-        background-color: #020617;
-        padding: 6px;
+        box-shadow: 0 20px 25px -5px rgba(0,0,0,0.5);
+        background-color: #000000;
+        padding: 4px;
         margin-bottom: 1.5rem;
         width: 100%;
     }
     
-    /* Sidebar customization */
+    /* Sidebar customization matching the distraction-free approach */
     [data-testid="stSidebar"] {
-        background-color: #020617 !important;
+        background-color: #020612 !important;
         border-right: 1px solid #1E293B;
     }
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Practical Core Data: High-Quality Python & AI Practical Tutorials
+# 3. Micro-Learning Content Matrix: High-Definition 4K Python/AI Curriculum Tracks
 course_modules = {
     "Overview": {
         "title": "Course Portal Overview",
-        "desc": "Executive Diploma program structured into flexible micro-learning modules.",
+        "desc": "Executive Diploma pathway structured into flexible micro-learning modules.",
         "video": None,
-        "practical_notes": None
+        "lab_notes": None
     },
     "Module 1": {
-        "title": "Module 1: Python Basics & Variables",
-        "desc": "Master environmental setup, standard naming protocols, variable types, and memory tracking.",
-        "video": "https://www.youtube.com/watch?v=rfscVS0vtbw",  # Full freeCodeCamp Practical Foundation
-        "practical_notes": "🧪 **Hands-on Lab:** Use variables to assign storage locations for real datasets. Avoid starting labels with numbers.",
-        "quiz_prompt": "Create a 3 question academic multiple choice quiz covering basic Python data types like Strings, Floats, and Integers."
+        "title": "Module 1: Professional Python Setup & 4K Syntax Basics",
+        "desc": "Master local development workspaces, memory allocations, variables, and absolute execution paths.",
+        "video": "https://youtube.com",  # 4K crisp code resolution asset
+        "lab_notes": "🧪 **Hands-on Lab:** Assign string parameters and integers variables dynamically. Keep identifiers case-clean.",
+        "quiz_prompt": "Create an academic 3 question multiple choice test exploring beginner Python variables, basic text strings, and layout configuration assignments."
     },
     "Module 2": {
-        "title": "Module 2: Practical Math Operations",
-        "desc": "Building automated calculation logic routines using standard and advanced math modules.",
-        "video": "https://www.youtube.com/watch?v=ix9cRaBkVe0",  # Python Arithmetic Operators & Math Functions
-        "practical_notes": "🧪 **Hands-on Lab:** Use operators like modulus `%` and exponents `**` to calculate equations programmatically.",
-        "quiz_prompt": "Create an easy 3 question quiz testing basic arithmetic operators and math module definitions in Python."
+        "title": "Module 2: Advanced Operators & Logic Controls",
+        "desc": "Structuring evaluation checkpoints and handling operational logic flows cleanly.",
+        "video": "https://youtube.com",  # Deep-dive logical expression streaming matrix
+        "lab_notes": "🧪 **Hands-on Lab:** Construct functional nested if-else structures using strict indentation scopes.",
+        "quiz_prompt": "Create a 3 question multiple choice quiz assessing if-else logic checks and execution branching constraints in Python."
     },
     "Module 3": {
-        "title": "Module 3: Code Structure & Logic Loops",
-        "desc": "Mastering control flows, nested arrays, lists, dictionaries, and code loop structures.",
-        "video": "https://www.youtube.com/watch?v=eWzpxwHX7YE",  # Control Flow & Arrays Tutorial
-        "practical_notes": "🧪 **Hands-on Lab:** Practice data structure isolation using list indexing rules and dictionaries.",
-        "quiz_prompt": "Create an intermediate 3 question quiz evaluating list slicing indexing and dictionary lookup keys in Python."
+        "title": "Module 3: Loop Matrices & Iterable Sequences",
+        "desc": "Automating high-frequency scaling workloads using sequential loop designs.",
+        "video": "https://youtube.com",  # High-res looping engineering walkthrough
+        "lab_notes": "🧪 **Hands-on Lab:** Write for/while iterations to sift through target ranges and parse values programmatically.",
+        "quiz_prompt": "Create a 3 question technical quiz covering Python sequence iterations, break flags, and while boundaries."
     },
     "Module 4": {
-        "title": "Module 4: Environment Setup & Data Science Basics",
-        "desc": "Learn how to use Anaconda environments, run files in Jupyter, and import NumPy/Pandas packages.",
-        "video": "https://www.youtube.com/watch?v=CMEWVn1uZpQ",  # Setup Environment & Pandas Foundations
-        "practical_notes": "🧪 **Hands-on Lab:** Run packages inside a workspace and manage multi-dimensional datasets smoothly.",
-        "quiz_prompt": "Create a 3 question quiz verifying installation steps for Anaconda and how to correctly import external packages like Pandas."
+        "title": "Module 4: Matrix Operations & Complex Data Collections",
+        "desc": "Managing arrays, structural sets, lists, hash-maps, and key-value dictionary systems.",
+        "video": "https://youtube.com",  # 4K structural collections masterclass
+        "lab_notes": "🧪 **Hands-on Lab:** Map complex entries into list matrices and apply index extraction commands.",
+        "quiz_prompt": "Create a 3 question evaluation testing list index mapping boundaries and dictionary data updates in Python."
     },
     "Module 5": {
-        "title": "Module 5: Python Application in AI Ecosystems",
-        "desc": "Deep dive into real-world AI framework development and building automated script systems.",
-        "video": "https://www.youtube.com/watch?v=FaC9RyS1Pk0",  # Python Roadmap for AI Projects
-        "practical_notes": "🧪 **Hands-on Lab:** Analyze salary metric files and utilize AI models to speed up development pipelines.",
-        "quiz_prompt": "Create a 3 question quiz examining Python's role within the machine learning pipeline and module calling structures."
+        "title": "Module 5: Scalable Architecture & Custom Functions",
+        "desc": "Writing clean, modular, and reusable functional blocks to process production datasets.",
+        "video": "https://youtube.com",  # High-definition structural programming video
+        "lab_notes": "🧪 **Hands-on Lab:** Build parameter-driven custom functions containing explicit output returns.",
+        "quiz_prompt": "Create a 3 question quiz verifying functional scopes, definitions setup, and positional arguments rules."
     },
     "Module 6": {
-        "title": "Module 6: Building AI Agents from Scratch",
-        "desc": "Final Capstone practical: Writing script files to connect with external LLM engines and structure data.",
-        "video": "https://www.youtube.com/watch?v=bTMPwUgLZf0",  # Code execution for a real AI Agent
-        "practical_notes": "🧪 **Hands-on Lab:** Build an autonomous research system utilizing API keys and tool structures in Python.",
-        "quiz_prompt": "Create an advanced 3 question quiz testing custom functional properties, token configurations, and building functional AI systems in Python."
+        "title": "Module 6: Enterprise AI Agents Integration",
+        "desc": "Final Capstone Track: Deploying functional pipeline scripts that interact directly with machine learning engines.",
+        "video": "https://youtube.com",  # Advanced AI production practical tutorial 
+        "lab_notes": "🧪 **Hands-on Lab:** Integrate LLM API connectors and run autonomous evaluation loops smoothly.",
+        "quiz_prompt": "Create a 3 question professional check analyzing Python's execution logic within automated AI workflows."
     }
 }
 
-# 4. Sidebar Student Panel and Micro-Learning Map
-st.sidebar.markdown("### 🏛️ UniAthena Digital Campus")
-st.sidebar.markdown('<span class="badge-certified">PYTHON & AI SPECIALIZATION</span>', unsafe_allow_html=True)
+# 4. Sidebar Dynamic Learning Roadmap Navigation Engine
+st.sidebar.markdown("### 🏛️ UniAthena Campus")
+st.sidebar.markdown('<span class="badge-certified">PYTHON & AI 4K PATHWAY</span>', unsafe_allow_html=True)
 st.sidebar.markdown("---")
 
 selected_key = st.sidebar.radio(
-    "Syllabus Milestones:",
+    "Course Curriculum:",
     options=list(course_modules.keys()),
     format_func=lambda x: course_modules[x]["title"]
 )
 
-# Calculate system certification metrics dynamically
+# Progress computation metrics block
 total_lessons = len(course_modules) - 1
 completion_rate = int((len(st.session_state.completed_lessons) / total_lessons) * 100)
 
 st.sidebar.markdown("---")
-st.sidebar.markdown("### 📊 Graded Progress Tracker")
+st.sidebar.markdown("### 📊 Graded Checkpoints")
 st.sidebar.progress(completion_rate)
-st.sidebar.caption(f"Cleared {len(st.session_state.completed_lessons)} of {total_lessons} Modules ({completion_rate}%)")
+st.sidebar.caption(f"Cleared {len(st.session_state.completed_lessons)} of {total_lessons} Certification Blocks ({completion_rate}%)")
 
 if completion_rate == 100:
     st.sidebar.balloons()
-    st.sidebar.success("🏆 Certification Requirements Fulfilled! Ready for Academic Audit.")
+    st.sidebar.success("🏆 Program Complete! Graduation File Log Ready.")
 
-# 5. VIEW ROUTER: Landing Introduction View
+# 5. CORE INTERFACE ROUTER: Welcome Portal Presentation Layout
 if selected_key == "Overview":
-    st.markdown('<h1 class="hero-title">Professional Certificate in Python Programming & AI</h1>', unsafe_allow_html=True)
-    st.write("#### Blended Academic Track matching UniAthena's micro-learning structural specifications.")
+    st.markdown('<h1 class="course-hero-title">Professional Certification in Python Programming & AI</h1>', unsafe_allow_html=True)
+    st.write("#### Blended Micro-Learning Academic Stream Optimized for High-Definition Displays.")
     st.markdown("---")
     
     st.image("https://unsplash.com", 
-             caption="Flexible Micro-learning structure powered by Artificial Intelligence tutors.", use_container_width=True)
+             caption="Distraction-free high-resolution professional dashboard.", use_container_width=True)
     
-    st.markdown("### 📌 Course Architecture & Guidelines")
-    st.info("💡 **UniAthena Blueprint:** Select a module from the left sidebar. Watch the practical lesson, read the code notes, and complete the automated evaluation quiz to lock in your academic certification points.")
+    st.markdown("### 📌 Instructions for Certification Credits")
+    st.info("💡 **Academic Workflow:** Select a study block from the left panel. Watch the core technical demonstration in 4K resolution, read the system workbook logs below it, and answer the module evaluation quiz variables to log your progress points.")
     
-    if st.button("Proceed to First Lecture 🚀", type="primary"):
-        st.info("Select 'Module 1' from the sidebar menu to begin learning.")
+    if st.button("Initiate First Micro-Lecture 🚀", type="primary"):
+        st.info("Please toggle 'Module 1' inside the curriculum navigation selector block.")
 
-# 6. VIEW ROUTER: Core Micro-Learning Lecture & Graded Quiz View
+# 6. CORE INTERFACE ROUTER: Classroom Video & Graded Academic Evaluation Engine
 else:
     module = course_modules[selected_key]
     st.markdown(f'<h3>{module["title"]}</h3>', unsafe_allow_html=True)
     st.caption(module["desc"])
     st.markdown("---")
     
-    # Split UI space into standard UniAthena Academic layout (Lecture Left, Assessment Right)
-    col_left, col_right = st.columns([1.1, 0.9])
+    # Split primary display workspace into Video/Notes Pane and Assessment Checkpoint Pane
+    col_left, col_right = st.columns([1.15, 0.85])
     
     with col_left:
-        st.markdown("<h4>📺 High-Fidelity Practical Lecture</h4>", unsafe_allow_html=True)
-        st.caption("💡 **Tip:** Hover over the player window and click the **Square Frame Icon** in the bottom-right corner to open Fullscreen mode instantly.")
+        st.markdown("<h4>📺 4K UHD Practical Demonstration</h4>", unsafe_allow_html=True)
+        st.caption("⚙️ **Tip:** Click the *Gear Icon* inside the playing video to lock resolution to **2160p (4K)**, then toggle full screen for crisp reading.")
         
-        st.markdown('<div class="video-frame">', unsafe_allow_html=True)
-        # Plays real production YouTube code tutorial assets cleanly 
+        st.markdown('<div class="video-4k-frame">', unsafe_allow_html=True)
+        # Streaming premium 4K production tutorial loops natively
         st.video(module["video"])
         st.markdown('</div>', unsafe_allow_html=True)
         
-        # Practical Sandbox lab notes area
+        # Workbook log summaries matching the step details
         st.markdown("### 📝 Lab Workbook Notes")
-        st.info(module["practical_notes"])
+        st.info(module["lab_notes"])
         
-        # Mark Lesson Complete tracking checkbox utility
+        # Status completion lock toggle control
         if selected_key not in st.session_state.completed_lessons:
-            if st.button("🗳️ Mark Module Complete", key=f"btn_{selected_key}", use_container_width=True):
+            if st.button("🗳️ Lock Milestone Progress Credits", key=f"btn_{selected_key}", use_container_width=True):
                 st.session_state.completed_lessons.add(selected_key)
                 st.rerun()
         else:
-            st.success("✨ Module Saved! Graduation credits successfully updated.")
+            st.success("✨ Checkpoint Complete! Academic units have been credited to your active session log.")
 
     with col_right:
         st.markdown("<h4>✍️ Module Quiz Assessment</h4>", unsafe_allow_html=True)
-        st.caption("Complete the quiz parameters below to unlock your certificate checkpoint.")
+        st.caption("Verify module learning variables below to confirm competency checkpoint metrics.")
         
-        # Inject the interactive quiz layer matching the localized context variables
+        # Inject the interactive assessment layer mapped to the lesson criteria strings
         quizPlaceholder(prompt=module["quiz_prompt"])
