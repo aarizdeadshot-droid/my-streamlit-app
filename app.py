@@ -38,10 +38,7 @@ st.write("In which class do you study")
 # Create an interactive text input box
 user_name = st.text_input("Enter your answer:", placeholder="Type here...")
 
-# Create an interactive button
-if st.button("Submit Place"):
-    if user_name:
-        st.success(f"good")
+
     else:
         st.warning("Please enter a answer first!")
 
