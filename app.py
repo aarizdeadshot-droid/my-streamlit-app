@@ -36,3 +36,8 @@ if st.button("Submit Answer"):
         
         st.success(f"Good,.")
 st.write("hard work on this web 50 lines code and this output")
+import streamlit as st
+
+# This button automatically opens in a new blank tab
+st.link_button("Open Dashboard", "https://streamlit.app")
+
