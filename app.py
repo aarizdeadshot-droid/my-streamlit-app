@@ -44,14 +44,16 @@ st.markdown("""
         display: inline-block;
     }
 
+    /* Fullscreen-Optimized Video Frame */
     .video-frame {
         border-radius: 12px;
         overflow: hidden;
         border: 1px solid #334155;
         box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
         background-color: #020617;
-        padding: 10px;
+        padding: 6px;
         margin-bottom: 1.5rem;
+        width: 100%;
     }
     
     /* Sidebar customization */
@@ -62,7 +64,7 @@ st.markdown("""
     </style>
 """, unsafe_allow_html=True)
 
-# 3. Data Dictionary: Professional Syllabus, Video Assets & Quiz Configurations
+# 3. Updated Dictionary: Using YouTube URLs to bypass browser video player blockages
 course_modules = {
     "Overview": {
         "title": "Certified Professional Python Track Overview",
@@ -72,37 +74,37 @@ course_modules = {
     "Module 1": {
         "title": "Module 1: Syntax Foundations & Variables",
         "desc": "Understanding memory reservation, structural tokens, and strong data naming conventions.",
-        "video": "https://w3schools.com",
+        "video": "https://youtube.com",  # Official YouTube stream path
         "quiz_prompt": "Create an academic multiple choice quiz with 3 questions checking basic python variables and syntax rules. Set difficulty to beginner."
     },
     "Module 2": {
         "title": "Module 2: Flow Control & Boolean Evaluation",
         "desc": "Structuring operational workflows through code branching logical statements.",
-        "video": "https://sample-videos.com",
+        "video": "https://youtube.com",
         "quiz_prompt": "Create a multiple choice assessment quiz with 3 questions testing python if-else statement scopes and indentation requirements. Set difficulty to easy."
     },
     "Module 3": {
         "title": "Module 3: Loop Structures & Infinite Controls",
         "desc": "Automating continuous executions efficiently using For and While loops.",
-        "video": "https://w3schools.com",
+        "video": "https://youtube.com",
         "quiz_prompt": "Create a python evaluation quiz with 3 questions focusing on loop iterations, breaking conditions, and range intervals. Set difficulty to intermediate."
     },
     "Module 4": {
         "title": "Module 4: Data Structures (Lists & Dictionaries)",
         "desc": "Mastering nested arrays, hash tables, and variable object grouping workflows.",
-        "video": "https://w3schools.com",
+        "video": "https://youtube.com",
         "quiz_prompt": "Create a 3 question multiple choice test on python data collections including list indices and dictionary key assignment rules."
     },
     "Module 5": {
         "title": "Module 5: Custom Functional Architecture",
         "desc": "Writing reusable code modules using return parameters, scoping configurations, and functions.",
-        "video": "https://sample-videos.com",
+        "video": "https://youtube.com",
         "quiz_prompt": "Generate a 3 question technical quiz covering Python function definition syntax, keyword arguments, and lexical scope bounds."
     },
     "Module 6": {
         "title": "Module 6: Object-Oriented Paradigm (OOP)",
         "desc": "Building classes, initializers, inheritance trees, and encapsulation protocols.",
-        "video": "https://w3schools.com",
+        "video": "https://youtube.com",
         "quiz_prompt": "Generate an academic multiple choice test with 3 questions exploring OOP concepts inside python like self arguments and method overriding rules."
     }
 }
@@ -119,7 +121,7 @@ selected_key = st.sidebar.radio(
 )
 
 # Calculate system certification metrics
-total_lessons = len(course_modules) - 1 # Excluding entry overview
+total_lessons = len(course_modules) - 1
 completion_rate = int((len(st.session_state.completed_lessons) / total_lessons) * 100)
 
 st.sidebar.markdown("---")
@@ -158,7 +160,10 @@ else:
     
     with col_left:
         st.markdown("<h4>📺 High-Fidelity Video Lecture</h4>", unsafe_allow_html=True)
+        st.caption("💡 **Tip:** Hover over the video player and click the **Square Frame Icon** at the bottom-right corner to open full screen.")
+        
         st.markdown('<div class="video-frame">', unsafe_allow_html=True)
+        # st.video handles YouTube links dynamically
         st.video(module["video"])
         st.markdown('</div>', unsafe_allow_html=True)
         
@@ -174,5 +179,5 @@ else:
         st.markdown("<h4>✍️ Module Quiz Assessment</h4>", unsafe_allow_html=True)
         st.caption("Verify understanding to unlock your credit units")
         
-        # Inject the unique interactive quiz placeholder snippet mapped to our dynamic prompt text configs
+        # Render the interactive test engine
         quizPlaceholder(prompt=module["quiz_prompt"])
