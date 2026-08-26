@@ -1,14 +1,18 @@
 import streamlit as st
 
-# Set up clean light page layout
-st.set_page_config(page_title="The Aariz Game", page_icon="🎮")
+# Configure the web page layout
+st.set_page_config(page_title="My Python Web App", page_icon="🐍")
 
-# Initialize game progression state safely
-if "game_started" not in st.session_state:
-    st.session_state.game_started = False
+st.title("Welcome to My Streamlit Web App! 🚀")
+st.write("This interactive interface was built 100% using Python code.")
+st.write("I am  PYTHON Developer")
 
-st.title("🎮 The Aariz Game")
-File "/mount/src/my-streamlit-app/app.py", line 11
-   st.write("OPPOLOAQ")
-  ^
-IndentationError: unexpected indent
+# Create an interactive text input box
+user_name = st.text_input("Enter your name:", placeholder="Type here...")
+
+# Create an interactive button
+if st.button("Submit Name"):
+    if user_name:
+        st.success(f"Hello, {user_name}! Welcome to your python-powered website.")
+    else:
+        st.warning("Please enter a name first!")
