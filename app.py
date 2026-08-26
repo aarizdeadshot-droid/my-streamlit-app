@@ -23,6 +23,6 @@ user_name = st.text_input("Enter your place:", placeholder="Type here...")
 # Create an interactive button
 if st.button("Submit Place"):
     if user_name:
-        st.success(f"good, {user_name}! good.")
+        st.success(f"good, {user_name}!.")
     else:
         st.warning("Please enter a place first!")
