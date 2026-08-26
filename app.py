@@ -36,11 +36,8 @@ if st.button("Submit Answer"):
         
         st.success(f"Good,.")
 st.write("hard work on this web 50 lines code and this output")
-import streamlit as st
 
 import streamlit as st
 
-# Opens your main homepage in a new blank browser tab
-st.link_button("Go to Main Page", "https://streamlit.app")
-
-
+# Replace with the exact live web address of your subpage
+st.link_button("Open Analytics Page", "https://streamlit.app")
