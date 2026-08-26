@@ -38,6 +38,9 @@ if st.button("Submit Answer"):
 st.write("hard work on this web 50 lines code and this output")
 import streamlit as st
 
-# This button automatically opens in a new blank tab
-st.link_button("Open Dashboard", "https://streamlit.app")
+import streamlit as st
+
+# Opens your main homepage in a new blank browser tab
+st.link_button("Go to Main Page", "https://streamlit.app")
+
 
