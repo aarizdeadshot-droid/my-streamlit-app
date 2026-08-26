@@ -185,9 +185,3 @@ with col_next:
     if para_num < 30:
         if st.button("Next Para ➡️"):
             st.info("Use Sidebar select option to step forward instantly!")
-
-
-with foot_col3:
-    if st.button("Next ➡️") and current_page < 604:
-        st.query_params["page"] = str(current_page + 1)
-        st.rerun()
