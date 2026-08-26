@@ -26,3 +26,14 @@ if st.button("Submit Place"):
         st.success(f"good, {user_name}!.")
     else:
         st.warning("Please enter a place first!")
+st.write("Are you enjoying my game")
+# Create an interactive text input box
+user_name = st.text_input("Enter your answer:", placeholder="Type here...")
+
+# Create an interactive button
+if st.button("Submit Answer"):
+    if user_name:
+        st.success(f"Good, {user_name}!.")
+
+
+
