@@ -28,7 +28,7 @@ if st.button("Submit Place"):
         st.warning("Please enter a place first!")
 st.write("Are you enjoying my game")
 # Create an interactive text input box
-user_name = st.text_input("Enter your answer:", placeholder="Type here...")
+user_name = st.text_input("Enter:", placeholder="Type here...")
 
 # Create an interactive button
 if st.button("Submit Answer"):
@@ -38,11 +38,11 @@ if st.button("Submit Answer"):
 st.write("In which class do you study")
 
 # Create an interactive text input box
-user_name = st.text_input("Enter your answer:", placeholder="Type here...")
+user_name = st.text_input("Enter:", placeholder="Type here...")
 
 # Create an interactive button
-if st.button("Submit Name"):
+if st.button("Submit"):
     if user_name:
         st.success(f"good,.")
     else:
-        st.warning("Please enter a answer first!")
+        st.warning("Please enter  first!")
