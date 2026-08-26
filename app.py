@@ -16,3 +16,6 @@ if st.button("Submit Name"):
         st.success(f"Hello, {user_name}! Welcome to your python-powered website.")
     else:
         st.warning("Please enter a name first!")
+st.write("where do you live")
+# Create an interactive text input box
+user_name = st.text_input("Enter your place:", placeholder="Type here...")
