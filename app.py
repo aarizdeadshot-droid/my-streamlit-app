@@ -7,14 +7,14 @@ st.set_page_config(
     layout="centered"
 )
 
-# 2. Hero Section
+# 2. Developer
 st.title("The Aariz Developer ✨")
 st.subheader("Interactive Student Profile & Bio Builder")
 st.write("Fill out the details below to generate a beautiful, shareable digital student card.")
 
 st.divider()
 
-# 3. Step 1: Basic Identity
+# 3. Step 1: Identity
 st.header("👤 Step 1: Personal Details")
 col_left, col_right = st.columns(2)
 
