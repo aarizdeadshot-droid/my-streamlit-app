@@ -113,137 +113,264 @@ with st.sidebar:
     # Progress bar just for visual aesthetics
     st.write("System Status:")
     st.progress(100, text="All modules operational")
-import streamlit as st
-import random
+    import streamlit as st
+import streamlit.components.v1 as components
 
-# 1. Page & Aesthetic Configuration
-st.set_page_config(page_title="Space Wave: Infinite Fleet", page_icon="🚀", layout="centered")
-st.title("🚀 Space Wave: Infinite Fleet")
-st.write("Defend your sector, collect cosmic scrap, and survive the endless alien waves!")
+# 1. Page Configuration
+st.set_page_config(page_title="Neon Wave Simulator", page_icon="📐", layout="centered")
+st.title("📐 Neon Wave Simulator")
+st.write("Hold **SPACEBAR** or **HOLD CLICK** inside the box to fly up diagonally. **RELEASE** to fall down diagonally!")
 
-# 2. Initialize Space Station Systems (Session State)
-if "scrap" not in st.session_state:
-    st.session_state.scrap = 0
-if "shields" not in st.session_state:
-    st.session_state.shields = 100
-if "wave" not in st.session_state:
-    st.session_state.wave = 1
-if "laser_tier" not in st.session_state:
-    st.session_state.laser_tier = 1  # Laser weapon damage multi
-if "drones" not in st.session_state:
-    st.session_state.drones = 0      # Automated scrap collectors
+# 2. Geometry Dash Style Zig-Zag Engine Component
+game_html = """
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+            margin: 0;
+            background-color: #0b0c10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            font-family: 'Courier New', Courier, monospace;
+        }
+        canvas {
+            border: 3px solid #1f2833;
+            background-color: #1f1135; /* Dark purple backdrop match */
+            box-shadow: 0 0 25px rgba(102, 252, 241, 0.15);
+            border-radius: 6px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
 
-weapon_names = {1: "Pulse Laser", 2: "Plasma Cannon", 3: "Photon Torpedo", 4: "Antimatter Beam"}
+    <canvas id="waveCanvas" width="600" height="400"></canvas>
 
-# 3. Dynamic Costs & Upgrades
-upgrade_laser_costs = {1: 30, 2: 150, 3: 600, 4: float('inf')}
-current_laser_cost = upgrade_laser_costs[st.session_state.laser_tier]
-drone_cost = 20 + (st.session_state.drones ** 2) * 12
+<script>
+    const canvas = document.getElementById("waveCanvas");
+    const ctx = canvas.getContext("2d");
 
-# Automated passive income from worker drones
-passive_scrap = st.session_state.drones * 2
-if passive_scrap > 0:
-    st.session_state.scrap += passive_scrap
+    // Game Variables
+    let isPressing = false;
+    let gameOver = false;
+    let score = 0;
+    let frameCount = 0;
 
-# 4. Core Core Game Action Methods
-def fire_lasers():
-    # Tap to shoot incoming wave debris and gather resources
-    damage_dealt = st.session_state.laser_tier * 3
-    st.session_state.scrap += damage_dealt
+    // Player Wave Vehicle Settings
+    let player = {
+        x: 100,
+        y: 200,
+        size: 10,
+        speedY: 3.5, // Strict diagonal velocity factor
+        trail: []    # Stores historical points for the neon path line
+    };
+
+    // Obstacle Spikes Track Array
+    let obstacles = [];
+
+    // Key Event Input Managers
+    window.addEventListener("keydown", function(e) {
+        if (e.code === "Space") {
+            e.preventDefault();
+            if (gameOver) { resetGame(); } else { isPressing = true; }
+        }
+    });
+
+    window.addEventListener("keyup", function(e) {
+        if (e.code === "Space") { isPressing = false; }
+    });
+
+    // Touch/Mouse Input Managers
+    canvas.addEventListener("mousedown", (e) => {
+        if (gameOver) { resetGame(); } else { isPressing = true; }
+    });
+    window.addEventListener("mouseup", () => { isPressing = false; });
     
-    # Progress wave mechanics slightly on action
-    if random.randint(1, 10) == 10:
-        st.session_state.wave += 1
+    canvas.addEventListener("touchstart", (e) => { e.preventDefault(); if (gameOver) { resetGame(); } else { isPressing = true; } });
+    window.addEventListener("touchend", () => { isPressing = false; });
 
-def repair_shields():
-    if st.session_state.scrap >= 10 and st.session_state.shields < 100:
-        st.session_state.scrap -= 10
-        st.session_state.shields = min(100, st.session_state.shields + 25)
+    function resetGame() {
+        player.y = 200;
+        player.trail = [];
+        obstacles = [];
+        score = 0;
+        gameOver = false;
+        frameCount = 0;
+        isPressing = false;
+    }
 
-def upgrade_weapons():
-    global current_laser_cost
-    if st.session_state.scrap >= current_laser_cost and st.session_state.laser_tier < 4:
-        st.session_state.scrap -= current_laser_cost
-        st.session_state.laser_tier += 1
+    function spawnSpikeWall() {
+        let size = Math.floor(Math.random() * 60) + 40;
+        let isCeiling = Math.random() > 0.5;
 
-def buy_drone():
-    if st.session_state.scrap >= drone_cost:
-        st.session_state.scrap -= drone_cost
-        st.session_state.drones += 1
+        obstacles.push({
+            x: canvas.width,
+            size: size,
+            isCeiling: isCeiling,
+            passed: false
+        });
+    }
 
-# 5. Dashboard Visual Design Setup
-col_stats1, col_stats2, col_stats3 = st.columns(3)
+    // Engine Core Step Update
+    function update() {
+        frameCount++;
 
-with col_stats1:
-    st.metric("Sector Wave", f"Wave {st.session_state.wave} 🛸")
+        if (!gameOver) {
+            // GD Movement: Sharp Up or Down adjustment instantly
+            if (isPressing) {
+                player.y -= player.speedY;
+            } else {
+                player.y += player.speedY;
+            }
 
-with col_stats2:
-    st.metric("Cosmic Scrap", f"{st.session_state.scrap} 💎")
+            // Save point position memory for trail tracking line
+            player.trail.push({x: player.x, y: player.y});
+            if (player.trail.length > 80) {
+                player.trail.shift();
+            }
 
-with col_stats3:
-    # Color warning conditional indicator for structural health
-    if st.session_state.shields > 40:
-        st.metric("Hull Shields", f"{st.session_state.shields}% 🛡️")
-    else:
-        st.metric("Hull Shields", f"{st.session_state.shields}% 🚨")
+            // Boundary Hit check (Floor & Ceiling Hazard Lines)
+            if (player.y < 15 || player.y > canvas.height - 15) {
+                gameOver = true;
+            }
 
-# Primary Engagement Zone
-st.button("💥 Fire Laser Batteries!", on_click=fire_lasers, use_container_width=True)
+            // Generation timing sequence
+            if (frameCount % 70 === 0) {
+                spawnSpikeWall();
+            }
 
-st.divider()
-st.subheader("🛰️ Hangar Deck & Tech Upgrades")
+            // Obstacle Movement calculations
+            for (let i = obstacles.length - 1; i >= 0; i--) {
+                obstacles[i].x -= 4; // Constant horizontal scrolling rate
 
-col_shop1, col_shop2 = st.columns(2)
+                // Precise Triangle Intersection Collision Calculations
+                let obs = obstacles[i];
+                if (player.x > obs.x && player.x < obs.x + obs.size) {
+                    if (obs.isCeiling && player.y < obs.size) {
+                        gameOver = true;
+                    }
+                    if (!obs.isCeiling && player.y > canvas.height - obs.size) {
+                        gameOver = true;
+                    }
+                }
 
-with col_shop1:
-    st.markdown("### Offensive Systems")
-    if st.session_state.laser_tier < 4:
-        next_weapon = weapon_names[st.session_state.laser_tier + 1]
-        st.write(f"**Equip {next_weapon}**")
-        st.caption(f"Multiplies blast scrap output. Cost: {current_laser_cost} Scrap")
-        st.button(
-            "⚡ Upgrade Cannons", 
-            on_click=upgrade_weapons, 
-            disabled=(st.session_state.scrap < current_laser_cost),
-            use_container_width=True
-        )
-    else:
-        st.success("🌌 Flagship status achieved! Max weapons armed.")
+                // Increment score counter safely
+                if (!obs.passed && obs.x + obs.size < player.x) {
+                    score++;
+                    obs.passed = true;
+                }
 
-with col_shop2:
-    st.markdown("### Automation & Repair")
-    st.write(f"**Deploy Collector Drone**")
-    st.caption(f"Passively collects +2 scrap. Cost: {drone_cost} Scrap (Owned: {st.session_state.drones})")
-    st.button(
-        "🛸 Launch Drone", 
-        on_click=buy_drone, 
-        disabled=(st.session_state.scrap < drone_cost),
-        use_container_width=True
-    )
-    
-    st.write("")
-    st.write(f"**Emergency Shield Recharge**")
-    st.caption("Restores 25% hull integrity. Cost: 10 Scrap")
-    st.button(
-        "🛠️ Fix Defenses", 
-        on_click=repair_shields, 
-        disabled=(st.session_state.scrap < 10 or st.session_state.shields >= 100),
-        use_container_width=True
-    )
+                // Memory cleanup
+                if (obs.x + obs.size < 0) {
+                    obstacles.splice(i, 1);
+                }
+            }
+        }
 
-# 6. Incoming Alien Wave Invasion Calculation
-# Difficulty modifier scales dynamically based on current Sector wave
-invasion_chance = 4 + (st.session_state.wave // 3)
-if random.randint(1, 15) <= invasion_chance and st.session_state.wave > 1:
-    damage_taken = random.randint(5, 15)
-    st.error(f"⚠️ Warning! Incoming Enemy Starfighters attacked! Shields depleted by {damage_taken}%.")
-    st.session_state.shields = max(0, st.session_state.shields - damage_taken)
+        draw();
+        requestAnimationFrame(update);
+    }
 
-# Game Over State Safety Evaluation
-if st.session_state.shields <= 0:
-    st.error("💀 Your ship's hulls ruptured. The space station was lost to the alien fleet!")
-    if st.button("🔄 Respawn New Fleet"):
-        st.session_state.scrap = 0
+    // Rendering Painting Methods
+    function draw() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw Dangerous Spike Boarders (Ceiling/Floor Lines)
+        ctx.fillStyle = "#4b134f";
+        ctx.fillRect(0, 0, canvas.width, 15);
+        ctx.fillRect(0, canvas.height - 15, canvas.width, 15);
+
+        // Draw Player Neon ZigZag Trail Line
+        if (player.trail.length > 1) {
+            ctx.beginPath();
+            ctx.moveTo(player.trail[0].x, player.trail[0].y);
+            
+            // Adjust trails visually relative to scroll speed simulation mapping
+            let scrollOffset = 4; 
+            for (let i = 1; i < player.trail.length; i++) {
+                let segment = player.trail[i];
+                // Shift trail left progressively to make it look anchored to space
+                let adjustedX = player.x - (player.trail.length - i) * scrollOffset;
+                ctx.lineTo(adjustedX, segment.y);
+            }
+            
+            ctx.strokeStyle = "#fffb00"; /* High glow yellow trail line */
+            ctx.lineWidth = 4;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = "#fffb00";
+            ctx.stroke();
+            ctx.shadowBlur = 0; // Turn off glow effects for standard shapes
+        }
+
+        // Draw Triangle Spikes
+        for (let obs of obstacles) {
+            ctx.fillStyle = "#c3073f";
+            ctx.strokeStyle = "#950714";
+            ctx.lineWidth = 2;
+            ctx.beginPath();
+
+            if (obs.isCeiling) {
+                ctx.moveTo(obs.x, 0);
+                ctx.lineTo(obs.x + obs.size, 0);
+                ctx.lineTo(obs.x + (obs.size / 2), obs.size);
+            } else {
+                ctx.moveTo(obs.x, canvas.height);
+                ctx.lineTo(obs.x + obs.size, canvas.height);
+                ctx.lineTo(obs.x + (obs.size / 2), canvas.height - obs.size);
+            }
+            ctx.closePath();
+            ctx.fill();
+            ctx.stroke();
+        }
+
+        // Draw Player Cone/Dart Shape
+        ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = "#00f0ff";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(player.x + 12, player.y);
+        ctx.lineTo(player.x - 8, player.y - 8);
+        ctx.lineTo(player.x - 4, player.y);
+        ctx.lineTo(player.x - 8, player.y + 8);
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
+        // Print Score Dashboard UI Elements
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "900 22px 'Courier New'";
+        ctx.fillText("ATTEMPT ATTEMPTS: " + score, 20, 45);
+
+        // Render Game-over display screens
+        if (gameOver) {
+            ctx.fillStyle = "rgba(11, 12, 16, 0.85)";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+            ctx.fillStyle = "#ff4c4c";
+            ctx.font = "900 36px 'Courier New'";
+            ctx.textAlign = "center";
+            ctx.fillText("CRASH DETECTED", canvas.width / 2, canvas.height / 2 - 25);
+
+            ctx.fillStyle = "#ffffff";
+            ctx.font = "16px 'Courier New'";
+            ctx.fillText("Tap Screen or Press Spacebar to Retry", canvas.width / 2, canvas.height / 2 + 20);
+            ctx.textAlign = "left";
+        }
+    }
+
+    // Initialize Game Engine Runtime Loop
+    update();
+</script>
+</body>
+</html>
+"""
+
+# 3. Render Component inside Web UI Frame layout
+components.html(game_html, height=430)
+
         st.session_state.shields = 100
         st.session_state.wave = 1
         st.session_state.laser_tier = 1
