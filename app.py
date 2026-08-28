@@ -59,6 +59,7 @@ with col_right3:
     github_link = st.text_input("GitHub Profile Link (Optional)", placeholder="https://github.com")
 
 st.divider()
+st.header("king")
 
 # 6. Profile Card Generation
 st.header("🪪 Generated Digital Profile Card")
