@@ -6,6 +6,7 @@ st.set_page_config(
     page_icon="✨",
     layout="centered"
 )
+st.header("At the end by the information there will a digital card of you") 
 
 # 2. Developer
 st.title("The Aariz Developer ✨")
@@ -59,7 +60,7 @@ with col_right3:
     github_link = st.text_input("GitHub Profile Link (Optional)", placeholder="https://github.com")
 
 st.divider()
-st.header("king")
+
 
 # 6. Profile Card Generation
 st.header("🪪 Generated Digital Profile Card")
