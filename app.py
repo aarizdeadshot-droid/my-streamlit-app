@@ -115,3 +115,4 @@ with st.sidebar:
     # Progress bar just for visual aesthetics
     st.write("System Status:")
     st.progress(100, text="All modules operational")
+st.title("Let's move to main game")
