@@ -116,3 +116,123 @@ with st.sidebar:
     st.write("System Status:")
     st.progress(100, text="All modules operational")
 st.title("Let's move to main game")
+import random
+import streamlit as st
+
+st.set_page_config(page_title="Streamlit Fighter", page_icon="🥊", layout="centered")
+
+# Initialize Game State
+if "p1_health" not in st.session_state:
+  st.session_state.p1_health = 100
+if "p2_health" not in st.session_state:
+  st.session_state.p2_health = 100
+if "game_over" not in st.session_state:
+  st.session_state.game_over = False
+if "log" not in st.session_state:
+  st.session_state.log = "Match started! Choose your attack!"
+
+
+def reset_game():
+  st.session_state.p1_health = 100
+  st.session_state.p2_health = 100
+  st.session_state.game_over = False
+  st.session_state.log = "New round! Fight!"
+
+
+# App Header
+st.title("🥊 Street Fighter: Streamlit Edition")
+st.write("Classic 1v1 arcade action inside a web app!")
+
+# Health Bars Layout
+col1, col2 = st.columns(2)
+
+with col1:
+  st.subheader("Player 1 (You)")
+  st.progress(st.session_state.p1_health)
+  st.write(f"HP: {st.session_state.p1_health}/100")
+
+with col2:
+  st.subheader("CPU Fighter")
+  st.progress(st.session_state.p2_health)
+  st.write(f"HP: {st.session_state.p2_health}/100")
+
+st.divider()
+
+# Combat Log
+st.info(st.session_state.log)
+
+
+# Move execution function
+def play_round(p1_move, p1_damage, p1_miss_chance):
+  if st.session_state.game_over:
+    return
+
+  # Player 1 action
+  if random.random() < p1_miss_chance:
+    p1_msg = f"Player 1 used {p1_move}, but it missed!"
+    actual_p1_dmg = 0
+  else:
+    actual_p1_dmg = random.randint(p1_damage - 5, p1_damage + 5)
+    p1_msg = f"Player 1 hits with {p1_move} for {actual_p1_dmg} damage!"
+
+  st.session_state.p2_health = max(
+      0, st.session_state.p2_health - actual_p1_dmg
+  )
+
+  # Check Win Condition
+  if st.session_state.p2_health == 0:
+    st.session_state.game_over = True
+    st.session_state.log = f"{p1_msg} Player 1 Wins! 🏆"
+    return
+
+  # CPU action
+  cpu_moves = [
+      ("Hadoken", 15, 0.2),
+      ("Dragon Punch", 22, 0.4),
+      ("Low Kick", 8, 0.1),
+  ]
+  cpu_move, cpu_dmg, cpu_miss = random.choice(cpu_moves)
+
+  if random.random() < cpu_miss:
+    cpu_msg = f"CPU tried {cpu_move}, but missed!"
+    actual_cpu_dmg = 0
+  else:
+    actual_cpu_dmg = random.randint(cpu_dmg - 3, cpu_dmg + 3)
+    p1_msg += f" CPU counters with {cpu_move} for {actual_cpu_dmg} damage!"
+    actual_cpu_dmg = actual_cpu_dmg
+  else:
+    actual_cpu_dmg = random.randint(cpu_dmg - 3, cpu_dmg + 3)
+    cpu_msg = f"CPU hits with {cpu_move} for {actual_cpu_dmg} damage!"
+
+  st.session_state.p1_health = max(
+      0, st.session_state.p1_health - actual_cpu_dmg
+  )
+
+  if st.session_state.p1_health == 0:
+    st.session_state.game_over = True
+    st.session_state.log = f"{p1_msg} | {cpu_msg} CPU Wins! 💀"
+  else:
+    st.session_state.log = f"{p1_msg} | {cpu_msg}"
+
+
+# Controls
+if not st.session_state.game_over:
+  c1, c2, c3 = st.columns(3)
+  with c1:
+    if st.button("👊 Light Punch (Fast, Low Damage)", use_container_width=True):
+      play_round("Light Punch", 10, 0.05)
+      st.rerun()
+  with c2:
+    if st.button(
+        "🦵 Heavy Kick (Slower, High Damage)", use_container_width=True
+    ):
+      play_round("Heavy Kick", 20, 0.3)
+      st.rerun()
+  with c3:
+    if st.button("🔥 Hadoken (Special Move)", use_container_width=True):
+      play_round("Hadoken", 28, 0.45)
+      st.rerun()
+else:
+    if st.button("Play Again", use_container_width=True):
+      reset_game()
+      st.rerun()
