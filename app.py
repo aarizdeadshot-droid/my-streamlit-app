@@ -119,9 +119,66 @@ st.title("Let's move to main game")
 import random
 import streamlit as st
 
-st.set_page_config(page_title="Streamlit Fighter", page_icon="🥊", layout="centered")
+st.set_page_config(page_title="DIGITAL_FIGHTER.EXE", page_icon="📟", layout="centered")
 
-# Initialize Game State securely
+# --- CUSTOM CSS DIGITAL RETRO INJECTION ---
+st.markdown("""
+<style>
+    /* Neon Cyberpunk Theme */
+    @import url('https://googleapis.com');
+    
+    html, body, [data-testid="stAppViewContainer"] {
+        background-color: #0d0f12 !important;
+        font-family: 'Share Tech Mono', monospace !important;
+        color: #00ff66 !important;
+    }
+    
+    h1, h2, h3, p, span, div {
+        font-family: 'Share Tech Mono', monospace !important;
+    }
+    
+    /* Glowing Headers */
+    h1 {
+        color: #00ffbb !important;
+        text-shadow: 0 0 10px rgba(0, 255, 187, 0.6);
+        text-align: center;
+    }
+    
+    /* Digital Info Box */
+    [data-testid="stNotification"] {
+        background-color: #161b22 !important;
+        border: 2px solid #00ff66 !important;
+        border-radius: 4px !important;
+        box-shadow: 0 0 15px rgba(0, 255, 102, 0.2);
+        color: #00ff66 !important;
+    }
+
+    /* Cyber Buttons */
+    button {
+        background-color: #1a1f29 !important;
+        color: #00ff66 !important;
+        border: 1px solid #00ff66 !important;
+        box-shadow: 0 0 5px rgba(0, 255, 102, 0.3) !important;
+        font-weight: bold !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    button:hover {
+        background-color: #00ff66 !important;
+        color: #0d0f12 !important;
+        box-shadow: 0 0 15px #00ff66 !important;
+        border: 1px solid #00ff66 !important;
+    }
+    
+    /* Matrix-like Progress/Health Bar */
+    div[data-testid="stProgress"] > div > div > div > div {
+        background-color: #00ff66 !important;
+        box-shadow: 0 0 8px #00ff66;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+# Initialize Digital States
 if "p1_health" not in st.session_state:
     st.session_state.p1_health = 100
 if "p2_health" not in st.session_state:
@@ -129,97 +186,96 @@ if "p2_health" not in st.session_state:
 if "game_over" not in st.session_state:
     st.session_state.game_over = False
 if "log" not in st.session_state:
-    st.session_state.log = "🏆 Match started! Choose your attack!"
+    st.session_state.log = "[SYSTEM]: BOOT_SEQUENCE_COMPLETE. READY TO FIGHT."
 
 def reset_game():
     st.session_state.p1_health = 100
     st.session_state.p2_health = 100
     st.session_state.game_over = False
-    st.session_state.log = "🥊 New round! Fight!"
+    st.session_state.log = "[SYSTEM]: MEMORY_RESET. INITIALIZING ROUND_02."
 
-# App Header UI
-st.title("🥊 Street Fighter: Streamlit Edition")
-st.write("Classic 1v1 arcade combat simulation.")
+# Header Terminal UI
+st.title("💾 DIGITAL_FIGHTER.EXE")
+st.write("`[STABLE_RELEASE // VER_2026.08]`")
+st.divider()
 
-# Health Bars Layout
+# Core Data Layout
 col1, col2 = st.columns(2)
 
 with col1:
-    st.subheader("Player 1 (You)")
+    st.markdown("### `[USR_01 / PLAYER]`")
     st.progress(st.session_state.p1_health / 100.0)
-    st.write(f"❤️ **HP:** {st.session_state.p1_health}/100")
+    st.markdown(f"**HP_STAT:** `{st.session_state.p1_health} / 100`")
 
 with col2:
-    st.subheader("CPU Fighter")
+    st.markdown("### `[CPU_02 / ENEMY]`")
     st.progress(st.session_state.p2_health / 100.0)
-    st.write(f"❤️ **HP:** {st.session_state.p2_health}/100")
+    st.markdown(f"**HP_STAT:** `{st.session_state.p2_health} / 100`")
 
 st.divider()
 
-# Combat Log display box
+# Terminal Log
 st.info(st.session_state.log)
 
-# Move execution loop logic
+# Action Mechanics
 def play_round(p1_move, p1_damage, p1_miss_chance):
     if st.session_state.game_over:
         return
 
-    # --- Player 1 Move Execution ---
+    # Player Move
     if random.random() < p1_miss_chance:
-        p1_msg = f"💥 Player 1 used {p1_move}, but it missed!"
+        p1_msg = f">> P1_EXE: {p1_move} ... [FAILED / MISSED]"
         actual_p1_dmg = 0
     else:
         actual_p1_dmg = random.randint(max(1, p1_damage - 4), p1_damage + 4)
-        p1_msg = f"🔥 Player 1 hits with {p1_move} for {actual_p1_dmg} damage!"
+        p1_msg = f">> P1_EXE: {p1_move} ... [SUCCESS / DEAL: {actual_p1_dmg} DMG]"
 
     st.session_state.p2_health = max(0, st.session_state.p2_health - actual_p1_dmg)
 
-    # Validate if Player 1 won on this turn
     if st.session_state.p2_health == 0:
         st.session_state.game_over = True
-        st.session_state.log = f"{p1_msg} \n\n🏆 PLAYER 1 WINS THE MATCH!"
+        st.session_state.log = f"{p1_msg}\n\n[TERMINAL]: CRITICAL_ERROR at CPU_02. PLAYER WINS."
         return
 
-    # --- CPU Counter Move Execution ---
+    # CPU Counter
     cpu_moves = [
-        ("Hadoken", 15, 0.20),
-        ("Dragon Punch", 22, 0.35),
-        ("Low Kick", 8, 0.05)
+        ("KINETIC_HADOKEN", 16, 0.20),
+        ("CYBER_UPPERCUT", 24, 0.35),
+        ("BIT_STRIKE", 9, 0.05)
     ]
     cpu_move, cpu_dmg, cpu_miss = random.choice(cpu_moves)
 
     if random.random() < cpu_miss:
-        cpu_msg = f"🤖 CPU tried {cpu_move}, but missed!"
+        cpu_msg = f">> CPU_EXE: {cpu_move} ... [FAILED / MISSED]"
         actual_cpu_dmg = 0
     else:
         actual_cpu_dmg = random.randint(max(1, cpu_dmg - 3), cpu_dmg + 3)
-        cpu_msg = f"⚡ CPU hits with {cpu_move} for {actual_cpu_dmg} damage!"
+        cpu_msg = f">> CPU_EXE: {cpu_move} ... [SUCCESS / DEAL: {actual_cpu_dmg} DMG]"
 
     st.session_state.p1_health = max(0, st.session_state.p1_health - actual_cpu_dmg)
 
-    # Validate if CPU won on this turn
     if st.session_state.p1_health == 0:
         st.session_state.game_over = True
-        st.session_state.log = f"{p1_msg} \n\n{cpu_msg} \n\n💀 CPU WINS! GAME OVER."
+        st.session_state.log = f"{p1_msg}\n\n{cpu_msg}\n\n[TERMINAL]: USER_01 SYSTEM_CRASH. CPU WINS."
     else:
-        st.session_state.log = f"{p1_msg} \n\n{cpu_msg}"
+        st.session_state.log = f"{p1_msg}\n\n{cpu_msg}"
 
-# Game Controller Buttons
+# Command Control Buttons
 if not st.session_state.game_over:
     c1, c2, c3 = st.columns(3)
     with c1:
-        if st.button("👊 Light Punch (Safe)", use_container_width=True):
-            play_round("Light Punch", 10, 0.05)
+        if st.button("RUN: BIT_PUNCH", use_container_width=True):
+            play_round("BIT_PUNCH", 10, 0.05)
             st.rerun()
     with c2:
-        if st.button("🦵 Heavy Kick (Risky)", use_container_width=True):
-            play_round("Heavy Kick", 22, 0.25)
+        if st.button("RUN: BEAM_KICK", use_container_width=True):
+            play_round("BEAM_KICK", 22, 0.25)
             st.rerun()
     with c3:
-        if st.button("🔥 Hadoken (Special)", use_container_width=True):
-            play_round("Hadoken", 30, 0.40)
+        if st.button("RUN: HADOKEN.SH", use_container_width=True):
+            play_round("HADOKEN.SH", 32, 0.45)
             st.rerun()
 else:
-    if st.button("🔄 Play Again", use_container_width=True):
+    if st.button("REBOOT_SYSTEM.BAT", use_container_width=True):
         reset_game()
         st.rerun()
