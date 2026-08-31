@@ -117,10 +117,16 @@ with st.sidebar:
     st.progress(100, text="All modules operational")
 st.title("Let's move to main game")
 st.title("Game Name: 🥋Teakwondo🥋")
- if not full_name:
+if st.button("🔥 Start the Game", use_container_width=True):
+    if not full_name:
         st.error("❌ Please enter your **Full Name** in Step 1 to generate your card.")
     elif not school_name:
         st.error("❌ Please enter your **School/College Name** in Step 2 to generate your card.")
+    else:
+        # Success celebration
+        st.balloons()
+        st.success("🎉 Your digital card is ready!")
+        
     else:
         # Success celebration
         st.balloons()
