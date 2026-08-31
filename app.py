@@ -116,3 +116,4 @@ with st.sidebar:
     st.write("System Status:")
     st.progress(100, text="All modules operational")
 st.title("Let's move to main game")
+st.title("Game Name: 🥋Teakwondo🥋")
