@@ -117,5 +117,4 @@ with st.sidebar:
     st.progress(100, text="All modules operational")
 st.title("Let's move to main game")
 st.title("Game Name: 🥋Teakwondo🥋")
-if st.button("🔥 Start the Game", use_container_width=True):
-
+st.button("🔥 Start the Game", use_container_width=True):
