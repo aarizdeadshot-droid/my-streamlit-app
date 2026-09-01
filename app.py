@@ -117,4 +117,4 @@ with st.sidebar:
     st.progress(100, text="All modules operational")
 st.title("Let's move to main game")
 st.title("Game Name: 🥋Teakwondo🥋")
-st.button("🔥 Create My Profile Card")
+st.button("🔥 Start The Game")
