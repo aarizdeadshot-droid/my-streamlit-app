@@ -18,6 +18,8 @@ if "game_active" not in st.session_state:
     st.session_state.enemy_hp = 100
     st.session_state.stamina = 100
     st.session_state.battle_log = []
+    st.session_state.player_pose = "🤺 READY"
+    st.session_state.enemy_pose = "READY 🤺"
 
 # 2. Developer Intro
 st.title("The Aariz Developer ✨")
@@ -115,7 +117,7 @@ if st.session_state.card_generated:
 st.divider()
 
 # ==========================================
-# 7. TAEKWONDO GAME ENGINE
+# 7. TAEKWONDO GAME ENGINE WITH VISUAL POSES
 # ==========================================
 st.header("🥋 Taekwondo Combat Arena")
 
@@ -125,13 +127,14 @@ def reset_game():
     st.session_state.stamina = 100
     fighter_title = full_name.upper() if full_name else "PLAYER"
     st.session_state.battle_log = [f"🥋 **Match Started!** {fighter_title} faces off against Red Belt Master Jin."]
+    st.session_state.player_pose = "(o_o)¬ 🥋 [READY]"
+    st.session_state.enemy_pose = "[READY] 🥋 ⌐(o_o)"
     st.session_state.game_active = True
 
 if not st.session_state.game_active:
     if st.button("🔥 Start The Game", use_container_width=True):
-        # Mandatory profile checks before starting game
         if not full_name or not school_name or not email:
-            st.warning("⚠️ **Access Denied!** You must fill in your **Full Name**, **School Name**, and **Email Address** in Steps 1–3 before you can start the Taekwondo game!")
+            st.warning("⚠️ **Access Denied!** You must fill in your **Full Name**, **School Name**, and **Email Address** in Steps 1–3 before starting the game!")
         else:
             reset_game()
             st.rerun()
@@ -140,11 +143,27 @@ else:
     # Game Header Controls
     g_col1, g_col2 = st.columns([3, 1])
     with g_col1:
-        st.subheader(f"Match: {full_name} (Blue Corner) vs Master Jin (Red Corner)")
+        st.subheader(f"Match: {full_name} (Blue) vs Master Jin (Red)")
     with g_col2:
         if st.button("🔄 Reset Match"):
             reset_game()
             st.rerun()
+
+    # VISUAL ARENA (Displays Action Poses)
+    st.markdown("### 🏟️ Dojo Arena")
+    with st.container(border=True):
+        arena_left, arena_center, arena_right = st.columns([2, 1, 2])
+        
+        with arena_left:
+            st.markdown(f"#### 🟦 {full_name}")
+            st.code(st.session_state.player_pose, language="text")
+            
+        with arena_center:
+            st.markdown("## 💥 VS 💥")
+            
+        with arena_right:
+            st.markdown("#### 🟥 Master Jin")
+            st.code(st.session_state.enemy_pose, language="text")
 
     # Health & Stamina Displays
     st.write(f"**{full_name}'s Health**")
@@ -158,39 +177,45 @@ else:
     # Check Win/Loss Conditions
     if st.session_state.player_hp <= 0:
         st.error("💥 **KNOCKOUT!** You were defeated by Master Jin.")
+        st.session_state.player_pose = "(x_x) 😵 [KO'D]"
+        st.session_state.enemy_pose = "🏆 ⌐(>_<) [WINNER]"
         st.session_state.game_active = False
     elif st.session_state.enemy_hp <= 0:
         st.balloons()
         st.success(f"🏆 **VICTORY!** {full_name} knocked out Master Jin with a perfect technique!")
+        st.session_state.player_pose = "🏆 (^_^) 🥋 [WINNER]"
+        st.session_state.enemy_pose = "[KO'D] 😵 (x_x)"
         st.session_state.game_active = False
     else:
         # Move Action Buttons
-        st.markdown("### Choose Your Martial Arts Move:")
+        st.markdown("### Choose Your Move:")
         m1, m2, m3, m4 = st.columns(4)
 
         move = None
-        if m1.button("🦵 Fast Jab Kick", help="Low cost, guaranteed hit"):
+        if m1.button("🦵 Jab Kick", help="Low cost, fast hit"):
             move = "jab"
-        if m2.button("💥 Roundhouse Kick", help="High damage, chance to miss"):
+        if m2.button("💥 Roundhouse", help="High damage, chance to miss"):
             move = "roundhouse"
-        if m3.button("🌪️ 360 Spin Kick", help="Massive damage, uses heavy stamina"):
+        if m3.button("🌪️ 360 Spin Kick", help="Massive damage, heavy stamina cost"):
             move = "spin"
-        if m4.button("🛡️ Guard & Rest", help="Restores stamina & reduces incoming damage"):
+        if m4.button("🛡️ Guard & Rest", help="Restores stamina & blocks damage"):
             move = "guard"
 
-        # Combat Logic Execution
+        # Combat Logic & Pose Animation Updates
         if move:
             player_dmg = 0
             enemy_dmg = 0
             log_text = ""
 
-            # Player Turn
+            # Player Turn Logic & Animation Setup
             if move == "jab":
                 if st.session_state.stamina >= 10:
                     player_dmg = random.randint(8, 14)
                     st.session_state.stamina -= 10
+                    st.session_state.player_pose = "🦵 (o_o)/~~  [JAB KICK!]"
                     log_text += f" You landed a sharp Jab Kick for **{player_dmg} DMG**!"
                 else:
+                    st.session_state.player_pose = "(>_<) 💦 [EXHAUSTED]"
                     log_text += " ⚠️ Out of stamina! Your attack failed."
 
             elif move == "roundhouse":
@@ -198,10 +223,13 @@ else:
                     st.session_state.stamina -= 20
                     if random.random() > 0.25:
                         player_dmg = random.randint(18, 26)
-                        log_text += f" 💥 **BOOM!** Powerful Roundhouse Kick lands for **{player_dmg} DMG**!"
+                        st.session_state.player_pose = "💥 (o_o)═🦵 [ROUNDHOUSE KICK!]"
+                        log_text += f" 💥 **BOOM!** Roundhouse Kick lands for **{player_dmg} DMG**!"
                     else:
+                        st.session_state.player_pose = "💨 (o_o)_  [MISSED KICK]"
                         log_text += " 💨 You swung with a Roundhouse but missed!"
                 else:
+                    st.session_state.player_pose = "(>_<) 💦 [EXHAUSTED]"
                     log_text += " ⚠️ Out of stamina!"
 
             elif move == "spin":
@@ -209,40 +237,52 @@ else:
                     st.session_state.stamina -= 35
                     if random.random() > 0.4:
                         player_dmg = random.randint(30, 42)
-                        log_text += f" 🌪️ **CRITICAL!** Dynamic 360 Spin Kick connects for **{player_dmg} DMG**!"
+                        st.session_state.player_pose = "🌪️ 🦵(>o<)🦵 [360 SPIN KICK!]"
+                        log_text += f" 🌪️ **CRITICAL!** 360 Spin Kick connects for **{player_dmg} DMG**!"
                     else:
+                        st.session_state.player_pose = "💨 (~_~)  [SPUN & MISSED]"
                         log_text += " 💨 Your 360 Spin Kick missed wide!"
                 else:
+                    st.session_state.player_pose = "(>_<) 💦 [EXHAUSTED]"
                     log_text += " ⚠️ Out of stamina!"
 
             elif move == "guard":
                 st.session_state.stamina = min(100, st.session_state.stamina + 35)
+                st.session_state.player_pose = "🛡️ (u_u)🛡️ [GUARDING]"
                 log_text += " 🛡️ You raised your guard and restored **+35 Stamina**."
 
-            # Apply Damage to Enemy
+            # Apply Damage to Enemy Pose
             st.session_state.enemy_hp = max(0, st.session_state.enemy_hp - player_dmg)
+            if player_dmg > 0:
+                st.session_state.enemy_pose = "[HIT! 💥] (><;)"
 
-            # Enemy Counter-Attack
+            # Enemy Counter-Attack Logic & Pose Updates
             if st.session_state.enemy_hp > 0:
                 enemy_move = random.choice(["punch", "axe_kick", "heavy_side_kick"])
                 
                 if move == "guard":
                     enemy_dmg = random.randint(2, 6)
-                    log_text += f" Enemy attacked, but your guard absorbed it! Took only **{enemy_dmg} DMG**."
+                    st.session_state.enemy_pose = "[BLOCKED!] 🦵 ⌐(o_o)"
+                    log_text += f" Enemy kicked, but your guard absorbed it! Took only **{enemy_dmg} DMG**."
                 else:
                     if enemy_move == "punch":
                         enemy_dmg = random.randint(6, 12)
+                        st.session_state.enemy_pose = "[PUNCH!] 🥊 ⌐(o_o)"
                         log_text += f" Enemy punched you back for **{enemy_dmg} DMG**."
                     elif enemy_move == "axe_kick":
                         enemy_dmg = random.randint(12, 20)
+                        st.session_state.enemy_pose = "[AXE KICK! 🦵] ⌐(o_o)"
                         log_text += f" Master Jin delivered an Axe Kick for **{enemy_dmg} DMG**!"
                     elif enemy_move == "heavy_side_kick":
                         enemy_dmg = random.randint(20, 30)
+                        st.session_state.enemy_pose = "[SIDE KICK! 💥🦵] ⌐(o_o)"
                         log_text += f" 🛑 Master Jin caught you with a Side Kick for **{enemy_dmg} DMG**!"
+
+                    st.session_state.player_pose += " 😵 [TAKING DAMAGE]"
 
                 st.session_state.player_hp = max(0, st.session_state.player_hp - enemy_dmg)
 
-            # Log Update & Refresh Screen
+            # Log Update & Screen Refresh
             st.session_state.battle_log.insert(0, log_text)
             st.rerun()
 
