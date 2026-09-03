@@ -56,7 +56,7 @@ with col_left2:
 with col_right2:
     hobbies = st.multiselect(
         "Select Your Hobbies",
-        ["Coding 💻", "Gaming 🎮", "Cricket 🏏", "Football ⚽", "Reading 📚", "Photography 📷", "Music 🎵", "Art🎨"],
+        ["Coding 💻", "Gaming 🎮", "Football ⚽", "Reading 📚", "Photography 📷", "Music 🎵", "Art🎨"],
         default=["Coding 💻"]
     )
     bio = st.text_area("Short Bio", placeholder="I am passionate about technology...", max_chars=150)
