@@ -296,6 +296,6 @@ with st.sidebar:
     st.info("💡 **Aariz Developer Tip:** Click the arrow icon in the top left corner on mobile devices to collapse this menu panel.")
     st.write("System Status:")
     st.progress(100, text="All modules operational")
-import streamlit as
+import streamlit as st
 import random 
 st.title("Still playing My Game do YOu your Office or school Work go ahead")
