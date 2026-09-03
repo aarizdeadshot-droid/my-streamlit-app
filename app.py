@@ -173,13 +173,13 @@ else:
 
     # Check Win/Loss Conditions
     if st.session_state.player_hp <= 0:
-        st.error("💥 **KNOCKOUT!** You were defeated by Master Jin.")
+        st.error("💥 **KNOCKOUT!** You were defeated by Sir Ishaq.")
         st.session_state.player_pose = "(x_x) 😵 [KO'D]"
         st.session_state.enemy_pose = "🏆 ⌐(>_<) [WINNER]"
         st.session_state.game_active = False
     elif st.session_state.enemy_hp <= 0:
         st.balloons()
-        st.success(f"🏆 **VICTORY!** {full_name} knocked out Master Jin with a perfect technique!")
+        st.success(f"🏆 **VICTORY!** {full_name} knocked out Sir Ishaq with a perfect technique!")
         st.session_state.player_pose = "🏆 (^_^) 🥋 [WINNER]"
         st.session_state.enemy_pose = "[KO'D] 😵 (x_x)"
         st.session_state.game_active = False
@@ -197,6 +197,8 @@ else:
             move = "spin"
         if m4.button("🛡️ Guard & Rest", help="Restores stamina & blocks damage"):
             move = "guard"
+        if m5.button("🌪️ 1048 Spin Kick", help="Massive damage, heavy stamina cost"):
+            move = "spin"
 
         # Combat Logic & Pose Animation Updates
         if move:
@@ -247,6 +249,16 @@ else:
                 st.session_state.stamina = min(100, st.session_state.stamina + 35)
                 st.session_state.player_pose = "🛡️ (u_u)🛡️ [GUARDING]"
                 log_text += " 🛡️ You raised your guard and restored **+35 Stamina**."
+                 elif move == "spin":
+                if st.session_state.stamina >= 35:
+                    st.session_state.stamina -= 35
+                    if random.random() > 0.4:
+                        player_dmg = random.randint(50, 72)
+                        st.session_state.player_pose = "🌪️ 🦵(>o<)🦵 [1048 SPIN KICK!]"
+                        log_text += f" 🌪️ **CRITICAL!** 1048 Spin Kick connects for **{player_dmg} DMG**!"
+                    else:
+                        st.session_state.player_pose = "💨 (~_~)  [SPUN & MISSED]"
+                        log_text += " 💨 Your 1048 Spin Kick missed wide!
 
             # Apply Damage to Enemy Pose
             st.session_state.enemy_hp = max(0, st.session_state.enemy_hp - player_dmg)
