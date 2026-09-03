@@ -118,47 +118,4 @@ with st.sidebar:
 st.title("Let's move to main game")
 st.title("Game Name: 🥋Teakwondo🥋")
 st.button("🔥 Start The Game")
-if st.button("🔥 Create My Profile Card", use_container_width=True):
-    if not full_name:
-        st.error("❌ Please enter your **Full Name** in Step 1 to generate your card.")
-    elif not school_name:
-        st.error("❌ Please enter your **School/College Name** in Step 2 to generate your card.")
-    else:
-        # Success celebration
-        st.balloons()
-        st.success("🎉 Your digital card is ready!")
-        
-        # Profile Card Box UI
-        with st.container(border=True):
-            st.markdown(f"## 🪪 {full_name.upper()}")
-            st.markdown(f"**🏫 Institution:** {school_name}")
-            
-            # Sub-layout inside the card
-            c1, c2, c3 = st.columns(3)
-            with c1:
-                st.metric(label="Class", value=student_class)
-            with c2:
-                st.metric(label="Age", value=f"{age} Y/O")
-            with c3:
-                st.metric(label="Roll No.", value=roll_number if roll_number else "N/A")
-            
-            st.markdown("---")
-            st.markdown(f"📖 **Favorite Subject:** {fav_subject if fav_subject else 'Not specified'}")
-            
-            # Formatting the hobbies list
-            if hobbies:
-                hobby_tags = " | ".join(hobbies)
-                st.markdown(f"❤️ **Interests:** {hobby_tags}")
-            
-            if bio:
-                st.markdown(f"📝 **Bio:** *\"{bio}\"*")
-                
-            st.markdown("---")
-            st.markdown(f"✉️ **Contact:** {email if email else 'No email provided'}")
-            if github_link:
-                st.markdown(f"🔗 **GitHub:** [{github_link}]({github_link})")
 
-# 7. Sidebar Information Terminal
-with st.sidebar:
-    st.title("⚙️ System Control")
-    st.write("This application dynamically builds custom profile cards using raw input data variables.")
