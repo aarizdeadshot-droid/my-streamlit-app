@@ -1,6 +1,5 @@
 import streamlit as st
 import random
-import time
 
 # 1. Page Configuration
 st.set_page_config(
@@ -124,29 +123,34 @@ def reset_game():
     st.session_state.player_hp = 100
     st.session_state.enemy_hp = 100
     st.session_state.stamina = 100
-    st.session_state.battle_log = ["🥋 **Match Started!** Face off against Red Belt Master Jin."]
+    fighter_title = full_name.upper() if full_name else "PLAYER"
+    st.session_state.battle_log = [f"🥋 **Match Started!** {fighter_title} faces off against Red Belt Master Jin."]
     st.session_state.game_active = True
 
 if not st.session_state.game_active:
     if st.button("🔥 Start The Game", use_container_width=True):
-        reset_game()
-        st.rerun()
+        # Mandatory profile checks before starting game
+        if not full_name or not school_name or not email:
+            st.warning("⚠️ **Access Denied!** You must fill in your **Full Name**, **School Name**, and **Email Address** in Steps 1–3 before you can start the Taekwondo game!")
+        else:
+            reset_game()
+            st.rerun()
 
 else:
     # Game Header Controls
     g_col1, g_col2 = st.columns([3, 1])
     with g_col1:
-        st.subheader("Match: You (Blue Corner) vs Master Jin (Red Corner)")
+        st.subheader(f"Match: {full_name} (Blue Corner) vs Master Jin (Red Corner)")
     with g_col2:
         if st.button("🔄 Reset Match"):
             reset_game()
             st.rerun()
 
     # Health & Stamina Displays
-    st.write("**Your Health**")
+    st.write(f"**{full_name}'s Health**")
     st.progress(st.session_state.player_hp / 100, text=f"HP: {st.session_state.player_hp}/100")
     
-    st.write("**Master Jin Health**")
+    st.write("**Master Jin's Health**")
     st.progress(st.session_state.enemy_hp / 100, text=f"HP: {st.session_state.enemy_hp}/100")
 
     st.write(f"⚡ **Stamina:** {st.session_state.stamina}/100")
@@ -157,7 +161,7 @@ else:
         st.session_state.game_active = False
     elif st.session_state.enemy_hp <= 0:
         st.balloons()
-        st.success("🏆 **VICTORY!** You knocked out Master Jin with a perfect technique!")
+        st.success(f"🏆 **VICTORY!** {full_name} knocked out Master Jin with a perfect technique!")
         st.session_state.game_active = False
     else:
         # Move Action Buttons
@@ -192,7 +196,7 @@ else:
             elif move == "roundhouse":
                 if st.session_state.stamina >= 20:
                     st.session_state.stamina -= 20
-                    if random.random() > 0.25: # 75% hit rate
+                    if random.random() > 0.25:
                         player_dmg = random.randint(18, 26)
                         log_text += f" 💥 **BOOM!** Powerful Roundhouse Kick lands for **{player_dmg} DMG**!"
                     else:
@@ -203,7 +207,7 @@ else:
             elif move == "spin":
                 if st.session_state.stamina >= 35:
                     st.session_state.stamina -= 35
-                    if random.random() > 0.4: # 60% hit rate
+                    if random.random() > 0.4:
                         player_dmg = random.randint(30, 42)
                         log_text += f" 🌪️ **CRITICAL!** Dynamic 360 Spin Kick connects for **{player_dmg} DMG**!"
                     else:
@@ -218,12 +222,12 @@ else:
             # Apply Damage to Enemy
             st.session_state.enemy_hp = max(0, st.session_state.enemy_hp - player_dmg)
 
-            # Enemy Counter-Attack (if still alive)
+            # Enemy Counter-Attack
             if st.session_state.enemy_hp > 0:
                 enemy_move = random.choice(["punch", "axe_kick", "heavy_side_kick"])
                 
                 if move == "guard":
-                    enemy_dmg = random.randint(2, 6) # Reduced damage when guarding
+                    enemy_dmg = random.randint(2, 6)
                     log_text += f" Enemy attacked, but your guard absorbed it! Took only **{enemy_dmg} DMG**."
                 else:
                     if enemy_move == "punch":
