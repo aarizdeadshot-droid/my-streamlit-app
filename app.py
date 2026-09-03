@@ -159,7 +159,7 @@ else:
             st.markdown("## 💥 VS 💥")
             
         with arena_right:
-            st.markdown("#### 🟥 Master Jin")
+            st.markdown("#### 🟥 Sir Ishaq")
             st.code(st.session_state.enemy_pose, language="text")
 
     # Health & Stamina Displays
@@ -269,11 +269,11 @@ else:
                     elif enemy_move == "axe_kick":
                         enemy_dmg = random.randint(12, 20)
                         st.session_state.enemy_pose = "[AXE KICK! 🦵] ⌐(o_o)"
-                        log_text += f" Master Jin delivered an Axe Kick for **{enemy_dmg} DMG**!"
+                        log_text += f" Sir Ishaq delivered an Axe Kick for **{enemy_dmg} DMG**!"
                     elif enemy_move == "heavy_side_kick":
                         enemy_dmg = random.randint(20, 30)
                         st.session_state.enemy_pose = "[SIDE KICK! 💥🦵] ⌐(o_o)"
-                        log_text += f" 🛑 Master Jin caught you with a Side Kick for **{enemy_dmg} DMG**!"
+                        log_text += f" 🛑 Sir Ishaq caught you with a Side Kick for **{enemy_dmg} DMG**!"
 
                     st.session_state.player_pose += " 😵 [TAKING DAMAGE]"
 
