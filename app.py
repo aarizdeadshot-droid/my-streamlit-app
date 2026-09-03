@@ -34,14 +34,13 @@ col_left, col_right = st.columns(2)
 
 with col_left:
     full_name = st.text_input("Full Name", placeholder="e.g. Aariz Bin Azmat")
-    age = st.number_input("Age", min_value=5, max_value=100, value=16, step=1)
+    age = st.number_input("Age", min_value=5, max_value=100, value=9, step=1)
 
 with col_right:
     student_class = st.selectbox(
         "Current Class / Grade",
         ["Class 1-5", "Class 6-8", "Class 9-10 (Matric / O-Levels)", "Class 11-12 (Inter / A-Levels)", "University Student", "Graduated"]
     )
-    roll_number = st.text_input("Roll Number / ID (Optional)", placeholder="e.g. SE-1024")
 
 st.divider()
 
@@ -99,8 +98,6 @@ if st.session_state.card_generated:
             st.metric(label="Class", value=student_class)
         with c2:
             st.metric(label="Age", value=f"{age} Y/O")
-        with c3:
-            st.metric(label="Roll No.", value=roll_number if roll_number else "N/A")
         
         st.markdown("---")
         st.markdown(f"📖 **Favorite Subject:** {fav_subject if fav_subject else 'Not specified'}")
