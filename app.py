@@ -123,7 +123,7 @@ def reset_game():
     st.session_state.enemy_hp = 100
     st.session_state.stamina = 100
     fighter_title = full_name.upper() if full_name else "PLAYER"
-    st.session_state.battle_log = [f"🥋 **Match Started!** {fighter_title} faces off against Red Belt Master Jin."]
+    st.session_state.battle_log = [f"🥋 **Match Started!** {fighter_title} faces off against Black Belt 2nd Dan Sir Ishaq."]
     st.session_state.player_pose = "(o_o)¬ 🥋 [READY]"
     st.session_state.enemy_pose = "[READY] 🥋 ⌐(o_o)"
     st.session_state.game_active = True
@@ -140,14 +140,14 @@ else:
     # Game Header Controls
     g_col1, g_col2 = st.columns([3, 1])
     with g_col1:
-        st.subheader(f"Match: {full_name} (Blue) vs Master Jin (Red)")
+        st.subheader(f"Match: {full_name} (Blue) vs Sir Ishaq (Red)")
     with g_col2:
         if st.button("🔄 Reset Match"):
             reset_game()
             st.rerun()
 
     # VISUAL ARENA (Displays Action Poses)
-    st.markdown("### 🏟️ Dojo Arena")
+    st.markdown("### 🏟️ Teakwondo Arena")
     with st.container(border=True):
         arena_left, arena_center, arena_right = st.columns([2, 1, 2])
         
