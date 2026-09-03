@@ -49,7 +49,7 @@ st.header("📚 Step 2: Academic & Hobbies")
 col_left2, col_right2 = st.columns(2)
 
 with col_left2:
-    school_name = st.text_input("School / College / University Name", placeholder="e.g. Army Public School")
+    school_name = st.text_input("School / College / University Name", placeholder="e.g. The Educators")
     fav_subject = st.text_input("Favorite Subject", placeholder="e.g. Computer Science")
 
 with col_right2:
@@ -58,7 +58,7 @@ with col_right2:
         ["Coding 💻", "Gaming 🎮", "Football ⚽", "Reading 📚", "Photography 📷", "Music 🎵", "Art🎨"],
         default=["Coding 💻"]
     )
-    bio = st.text_area("Short Bio", placeholder="I am passionate about technology...", max_chars=150)
+    bio = st.text_area(" Bio", placeholder="I am a junior python develper etc ...", max_chars=100000)
 
 st.divider()
 
@@ -67,7 +67,7 @@ st.header("🌐 Step 3: Contact & Links")
 col_left3, col_right3 = st.columns(2)
 
 with col_left3:
-    email = st.text_input("Email Address", placeholder="yourname@example.com")
+    email = st.text_input("Email Address", placeholder="username@example.com")
 with col_right3:
     github_link = st.text_input("GitHub Profile Link", placeholder="https://github.com")
 
