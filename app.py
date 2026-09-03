@@ -166,7 +166,7 @@ else:
     st.write(f"**{full_name}'s Health**")
     st.progress(st.session_state.player_hp / 100, text=f"HP: {st.session_state.player_hp}/100")
     
-    st.write("**Master Jin's Health**")
+    st.write("**Sir Ishaq's Health**")
     st.progress(st.session_state.enemy_hp / 100, text=f"HP: {st.session_state.enemy_hp}/100")
 
     st.write(f"⚡ **Stamina:** {st.session_state.stamina}/100")
