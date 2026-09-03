@@ -298,4 +298,4 @@ with st.sidebar:
     st.progress(100, text="All modules operational")
 import streamlit as st
 import random 
-st.title("Still playing My Game do YOu your Office or school Work go ahead")
+st.title("😡😡😡Still playing My Game do You your Office or school Work go ahead")
