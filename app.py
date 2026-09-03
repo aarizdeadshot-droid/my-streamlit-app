@@ -34,13 +34,14 @@ col_left, col_right = st.columns(2)
 
 with col_left:
     full_name = st.text_input("Full Name", placeholder="e.g. Aariz Bin Azmat")
-    age = st.number_input("Age", min_value=5, max_value=100, value=9, step=1)
+    age = st.number_input("Age", min_value=5, max_value=100, value=16, step=1)
 
 with col_right:
     student_class = st.selectbox(
         "Current Class / Grade",
         ["Class 1-5", "Class 6-8", "Class 9-10 (Matric / O-Levels)", "Class 11-12 (Inter / A-Levels)", "University Student", "Graduated"]
     )
+    roll_number = st.text_input("Roll Number / ID (Optional)", placeholder="e.g. SE-1024")
 
 st.divider()
 
@@ -49,16 +50,16 @@ st.header("📚 Step 2: Academic & Hobbies")
 col_left2, col_right2 = st.columns(2)
 
 with col_left2:
-    school_name = st.text_input("School / College / University Name", placeholder="e.g. The Educators")
+    school_name = st.text_input("School / College / University Name", placeholder="e.g. Army Public School")
     fav_subject = st.text_input("Favorite Subject", placeholder="e.g. Computer Science")
 
 with col_right2:
     hobbies = st.multiselect(
         "Select Your Hobbies",
-        ["Coding 💻", "Gaming 🎮", "Football ⚽", "Reading 📚", "Photography 📷", "Music 🎵", "Art🎨"],
+        ["Coding 💻", "Gaming 🎮", "Cricket 🏏", "Football ⚽", "Reading 📚", "Photography 📷", "Music 🎵", "Art🎨"],
         default=["Coding 💻"]
     )
-    bio = st.text_area(" Bio", placeholder="I am a junior python develper etc ...", max_chars=100000)
+    bio = st.text_area("Short Bio", placeholder="I am passionate about technology...", max_chars=150)
 
 st.divider()
 
@@ -67,7 +68,7 @@ st.header("🌐 Step 3: Contact & Links")
 col_left3, col_right3 = st.columns(2)
 
 with col_left3:
-    email = st.text_input("Email Address", placeholder="username@example.com")
+    email = st.text_input("Email Address", placeholder="yourname@example.com")
 with col_right3:
     github_link = st.text_input("GitHub Profile Link", placeholder="https://github.com")
 
@@ -98,6 +99,8 @@ if st.session_state.card_generated:
             st.metric(label="Class", value=student_class)
         with c2:
             st.metric(label="Age", value=f"{age} Y/O")
+        with c3:
+            st.metric(label="Roll No.", value=roll_number if roll_number else "N/A")
         
         st.markdown("---")
         st.markdown(f"📖 **Favorite Subject:** {fav_subject if fav_subject else 'Not specified'}")
@@ -123,7 +126,7 @@ def reset_game():
     st.session_state.enemy_hp = 100
     st.session_state.stamina = 100
     fighter_title = full_name.upper() if full_name else "PLAYER"
-    st.session_state.battle_log = [f"🥋 **Match Started!** {fighter_title} faces off against Black Belt 2nd Dan Sir Ishaq."]
+    st.session_state.battle_log = [f"🥋 **Match Started!** {fighter_title} faces off against Red Belt Master Jin."]
     st.session_state.player_pose = "(o_o)¬ 🥋 [READY]"
     st.session_state.enemy_pose = "[READY] 🥋 ⌐(o_o)"
     st.session_state.game_active = True
@@ -140,14 +143,14 @@ else:
     # Game Header Controls
     g_col1, g_col2 = st.columns([3, 1])
     with g_col1:
-        st.subheader(f"Match: {full_name} (Blue) vs Sir Ishaq (Red)")
+        st.subheader(f"Match: {full_name} (Blue) vs Master Jin (Red)")
     with g_col2:
         if st.button("🔄 Reset Match"):
             reset_game()
             st.rerun()
 
     # VISUAL ARENA (Displays Action Poses)
-    st.markdown("### 🏟️ Teakwondo Arena")
+    st.markdown("### 🏟️ Dojo Arena")
     with st.container(border=True):
         arena_left, arena_center, arena_right = st.columns([2, 1, 2])
         
@@ -159,27 +162,27 @@ else:
             st.markdown("## 💥 VS 💥")
             
         with arena_right:
-            st.markdown("#### 🟥 Sir Ishaq")
+            st.markdown("#### 🟥 Master Jin")
             st.code(st.session_state.enemy_pose, language="text")
 
     # Health & Stamina Displays
     st.write(f"**{full_name}'s Health**")
     st.progress(st.session_state.player_hp / 100, text=f"HP: {st.session_state.player_hp}/100")
     
-    st.write("**Sir Ishaq's Health**")
+    st.write("**Master Jin's Health**")
     st.progress(st.session_state.enemy_hp / 100, text=f"HP: {st.session_state.enemy_hp}/100")
 
     st.write(f"⚡ **Stamina:** {st.session_state.stamina}/100")
 
     # Check Win/Loss Conditions
     if st.session_state.player_hp <= 0:
-        st.error("💥 **KNOCKOUT!** You were defeated by Sir Ishaq.")
+        st.error("💥 **KNOCKOUT!** You were defeated by Master Jin.")
         st.session_state.player_pose = "(x_x) 😵 [KO'D]"
         st.session_state.enemy_pose = "🏆 ⌐(>_<) [WINNER]"
         st.session_state.game_active = False
     elif st.session_state.enemy_hp <= 0:
         st.balloons()
-        st.success(f"🏆 **VICTORY!** {full_name} knocked out Sir Ishaq with a perfect technique!")
+        st.success(f"🏆 **VICTORY!** {full_name} knocked out Master Jin with a perfect technique!")
         st.session_state.player_pose = "🏆 (^_^) 🥋 [WINNER]"
         st.session_state.enemy_pose = "[KO'D] 😵 (x_x)"
         st.session_state.game_active = False
@@ -242,7 +245,12 @@ else:
                 else:
                     st.session_state.player_pose = "(>_<) 💦 [EXHAUSTED]"
                     log_text += " ⚠️ Out of stamina!"
-                    
+
+            elif move == "guard":
+                st.session_state.stamina = min(100, st.session_state.stamina + 35)
+                st.session_state.player_pose = "🛡️ (u_u)🛡️ [GUARDING]"
+                log_text += " 🛡️ You raised your guard and restored **+35 Stamina**."
+
             # Apply Damage to Enemy Pose
             st.session_state.enemy_hp = max(0, st.session_state.enemy_hp - player_dmg)
             if player_dmg > 0:
@@ -264,11 +272,11 @@ else:
                     elif enemy_move == "axe_kick":
                         enemy_dmg = random.randint(12, 20)
                         st.session_state.enemy_pose = "[AXE KICK! 🦵] ⌐(o_o)"
-                        log_text += f" Sir Ishaq delivered an Axe Kick for **{enemy_dmg} DMG**!"
+                        log_text += f" Master Jin delivered an Axe Kick for **{enemy_dmg} DMG**!"
                     elif enemy_move == "heavy_side_kick":
                         enemy_dmg = random.randint(20, 30)
                         st.session_state.enemy_pose = "[SIDE KICK! 💥🦵] ⌐(o_o)"
-                        log_text += f" 🛑 Sir Ishaq caught you with a Side Kick for **{enemy_dmg} DMG**!"
+                        log_text += f" 🛑 Master Jin caught you with a Side Kick for **{enemy_dmg} DMG**!"
 
                     st.session_state.player_pose += " 😵 [TAKING DAMAGE]"
 
