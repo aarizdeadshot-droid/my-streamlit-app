@@ -39,7 +39,7 @@ with col_left:
 with col_right:
     student_class = st.selectbox(
         "Current Class / Grade",
-        ["Class 1-5", "Class 6-8", "Class 9-10 (Matric / O-Levels)", "Class 11-12 (Inter / A-Levels)", "University Student", "Graduated"]
+        ["Pg-kg", "Class 1-8", "Class 9-10 (Matric / O-Levels)", "Class 11-12 (Inter / A-Levels)", "University Student", "Graduated"]
     )
 
 st.divider()
