@@ -39,7 +39,7 @@ with col_left:
 with col_right:
     student_class = st.selectbox(
         "Current Class / Grade",
-        ["Pg-kg", "Class 1-8", "Class 9-10 (Matric / O-Levels)", "Class 11-12 (Inter / A-Levels)", "University Student", "Graduated"]
+        ["PlayGroup-kindergarden", "Class 1-8", "Class 9-10 (Matric / O-Levels)", "Class 11-12 (Inter / A-Levels)", "University Student", "Graduated"]
     )
 
 st.divider()
@@ -296,6 +296,4 @@ with st.sidebar:
     st.info("💡 **Aariz Developer Tip:** Click the arrow icon in the top left corner on mobile devices to collapse this menu panel.")
     st.write("System Status:")
     st.progress(100, text="All modules operational")
-import streamlit as st
-import random 
 st.title("😡😡😡Still playing My Game do You your Office or school Work go ahead")
