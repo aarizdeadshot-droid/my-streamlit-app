@@ -1,4 +1,4 @@
-import django as st
+import streamlit as st
 import random
 
 # 1. Page Configuration
