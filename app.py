@@ -58,7 +58,7 @@ with col_right2:
         ["Coding 💻", "Gaming 🎮", "Football ⚽", "Reading 📚", "Photography 📷", "Music 🎵", "Art🎨"],
         default=["Coding 💻"]
     )
-    bio = st.text_area("Bio", placeholder="I am passionate about technology...", max_chars=15000)
+    bio = st.text_area("Bio", placeholder="I am a Junior python Develolper...", max_chars=15000)
 
 st.divider()
 
@@ -69,7 +69,7 @@ col_left3, col_right3 = st.columns(2)
 with col_left3:
     email = st.text_input("Email Address", placeholder="yourname@example.com")
 with col_right3:
-    github_link = st.text_input("GitHub Profile Link", placeholder="https://github.com")
+    WhatsApp_Number = st.text_input("WhatsApp Number", placeholder="WhatsApp Number")
 
 st.divider()
 
