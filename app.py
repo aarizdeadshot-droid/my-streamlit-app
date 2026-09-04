@@ -49,7 +49,7 @@ st.header("📚 Step 2: Academic & Hobbies")
 col_left2, col_right2 = st.columns(2)
 
 with col_left2:
-    school_name = st.text_input("School / College / University Name", placeholder="e.g. Army Public School")
+    school,office_name = st.text_input("School / College / Office / University Name", placeholder="e.g. Army Public School")
     fav_subject = st.text_input("Favorite Subject", placeholder="e.g. Computer Science")
 
 with col_right2:
@@ -91,7 +91,7 @@ if st.session_state.card_generated:
     st.success("🎉 Your digital card is ready!")
     with st.container(border=True):
         st.markdown(f"## 🪪 {full_name.upper()}")
-        st.markdown(f"**🏫 Institution:** {school_name}")
+        st.markdown(f"**🏫 Institution:** {school,office_name}")
         
         c1, c2, c3 = st.columns(3)
         with c1:
