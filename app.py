@@ -108,7 +108,7 @@ if st.session_state.card_generated:
             
         st.markdown("---")
         st.markdown(f"✉️ **Contact:** {email if email else 'No email provided'}")
-        if github_link:
+        if WhatsApp_Number:
             st.markdown(f"🔗 **WhatsApp:** [{WhatsApp_Number}]({WhatsApp_Number})")
 
 st.divider()
