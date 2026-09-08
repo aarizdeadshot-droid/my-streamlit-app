@@ -14,9 +14,9 @@ if "card_generated" not in st.session_state:
 
 if "game_active" not in st.session_state:
     st.session_state.game_active = False
-    st.session_state.player_hp = 100
+    st.session_state.player_hp = 10000
     st.session_state.enemy_hp = 100
-    st.session_state.stamina = 100
+    st.session_state.stamina = 100000
     st.session_state.battle_log = []
     st.session_state.player_pose = "🤺 READY"
     st.session_state.enemy_pose = "READY 🤺"
