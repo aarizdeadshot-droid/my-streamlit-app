@@ -163,9 +163,9 @@ def reset_game(mode="taekwondo"):
     st.session_state.player_hp = 100
     st.session_state.enemy_hp = 100
     st.session_state.stamina = 100
-    fighter_title = full_name.upper() if full_name else "PLAYER"
 
     if mode == "taekwondo":
+        fighter_title = full_name.upper() if full_name else "PLAYER"
         st.session_state.battle_log = [
             f"🥋 **Match Started!** {fighter_title} faces off against Black"
             " Belt 2nd Dan Sir Ishaq."
@@ -174,8 +174,8 @@ def reset_game(mode="taekwondo"):
         st.session_state.enemy_pose = "[READY] 🥋 ⌐(o_o)"
     else:
         st.session_state.battle_log = [
-            f"⚔️ **Battle Commenced!** {fighter_title} (Muslim Warrior) enters"
-            " Christians."
+            "⚔️ **Battle Commenced!** Muslims face off against Christians in"
+            " combat!"
         ]
         st.session_state.player_pose = "⚔️ (o_o)🛡️ [READY]"
         st.session_state.enemy_pose = "[READY] 🛡️(o_o) 🗡️"
@@ -215,16 +215,21 @@ if not st.session_state.game_active:
 else:
     mode = st.session_state.game_mode
 
+    # Set Display Names based on selected mode
+    if mode == "taekwondo":
+        player_disp = full_name if full_name else "Player"
+        enemy_disp = "Sir Ishaq"
+    else:
+        player_disp = "Muslims"
+        enemy_disp = "Christians"
+
     # Game Header Controls
     g_col1, g_col2 = st.columns([3, 1])
     with g_col1:
         if mode == "taekwondo":
-            st.subheader(f"Match: {full_name} (Blue) vs Sir Ishaq (Red)")
+            st.subheader(f"Match: {player_disp} (Blue) vs Sir Ishaq (Red)")
         else:
-            st.subheader(
-                f"Battle: {full_name} (Muslim Warrior) vs Cristian"
-                " s"
-            )
+            st.subheader("Battle: Muslims vs Christians")
 
     with g_col2:
         if st.button("🔄 Reset Match"):
@@ -234,16 +239,16 @@ else:
     # VISUAL ARENA
     if mode == "taekwondo":
         st.markdown("### 🏟️ Taekwondo Arena")
-        enemy_label = "🟥 Sir Ishaq"
+        enemy_label = f"🟥 {enemy_disp}"
     else:
-        st.markdown("### 🏟️ Crusader Battlefield")
-        enemy_label = "🔴 Cristians"
+        st.markdown("### 🏟️ Battlefield")
+        enemy_label = f"🔴 {enemy_disp}"
 
     with st.container(border=True):
         arena_left, arena_center, arena_right = st.columns([2, 1, 2])
 
         with arena_left:
-            st.markdown(f"#### 🟦 {Muslims}")
+            st.markdown(f"#### 🟦 {player_disp}")
             st.code(st.session_state.player_pose, language="text")
 
         with arena_center:
@@ -254,14 +259,13 @@ else:
             st.code(st.session_state.enemy_pose, language="text")
 
     # Health & Stamina Displays
-    opponent_name = "Sir Ishaq" if mode == "taekwondo" else "Sir Guy"
-    st.write(f"**{full_Name}'s Health**")
+    st.write(f"**{player_disp}'s Health**")
     st.progress(
         st.session_state.player_hp / 100,
         text=f"HP: {st.session_state.player_hp}/100",
     )
 
-    st.write(f"**{opponent_name}'s Health**")
+    st.write(f"**{enemy_disp}'s Health**")
     st.progress(
         st.session_state.enemy_hp / 100,
         text=f"HP: {st.session_state.enemy_hp}/100",
@@ -271,14 +275,14 @@ else:
 
     # Check Win/Loss Conditions
     if st.session_state.player_hp <= 0:
-        st.error(f"💥 **DEFEAT!** You were overcome by {opponent_name}.")
+        st.error(f"💥 **DEFEAT!** {player_disp} were defeated by {enemy_disp}.")
         st.session_state.player_pose = "(x_x) 😵 [KO'D]"
         st.session_state.enemy_pose = "🏆 ⌐(>_<) [WINNER]"
         st.session_state.game_active = False
     elif st.session_state.enemy_hp <= 0:
         st.balloons()
         st.success(
-            f"🏆 **VICTORY!** {full_name} defeated {opponent_name} in combat!"
+            f"🏆 **VICTORY!** {player_disp} defeated {enemy_disp} in combat!"
         )
         st.session_state.player_pose = "🏆 (^_^) 🥋 [WINNER]"
         st.session_state.enemy_pose = "[KO'D] 😵 (x_x)"
@@ -327,7 +331,9 @@ else:
                     st.session_state.player_pose = (
                         "🦵 (o_o)/~~ [LIGHT ATTACK!]"
                     )
-                    log_text += f" You landed a hit for **{player_dmg} DMG**!"
+                    log_text += (
+                        f" {player_disp} landed a hit for **{player_dmg} DMG**!"
+                    )
                 else:
                     st.session_state.player_pose = "(>_<) 💦 [EXHAUSTED]"
                     log_text += " ⚠️ Out of stamina!"
@@ -346,7 +352,7 @@ else:
                         )
                     else:
                         st.session_state.player_pose = "💨 (o_o)_ [MISSED]"
-                        log_text += " 💨 Your attack missed!"
+                        log_text += " 💨 Attack missed!"
                 else:
                     st.session_state.player_pose = "(>_<) 💦 [EXHAUSTED]"
                     log_text += " ⚠️ Out of stamina!"
@@ -376,7 +382,7 @@ else:
                 )
                 st.session_state.player_pose = "🛡️ (u_u)🛡️ [GUARDING]"
                 log_text += (
-                    " 🛡️ You raised your guard and restored **+35 Stamina**."
+                    " 🛡️ Raised guard and restored **+35 Stamina**."
                 )
 
             # Apply Damage
@@ -394,22 +400,21 @@ else:
                     enemy_dmg = random.randint(2, 6)
                     st.session_state.enemy_pose = "[BLOCKED!] 🦵 ⌐(o_o)"
                     log_text += (
-                        " Enemy attacked, but your guard absorbed it! Took"
-                        f" only **{enemy_dmg} DMG**."
+                        f" {enemy_disp} attacked, but guard absorbed it!"
+                        f" Took only **{enemy_dmg} DMG**."
                     )
                 else:
                     if enemy_move == "light":
                         enemy_dmg = random.randint(6, 12)
                         st.session_state.enemy_pose = "[ATTACK!] 🥊 ⌐(o_o)"
                         log_text += (
-                            f" {opponent_name} hit back for **{enemy_dmg}"
-                            " DMG**."
+                            f" {enemy_disp} hit back for **{enemy_dmg} DMG**."
                         )
                     elif enemy_move == "medium":
                         enemy_dmg = random.randint(12, 20)
                         st.session_state.enemy_pose = "[STRIKE!] 🦵 ⌐(o_o)"
                         log_text += (
-                            f" {opponent_name} struck for **{enemy_dmg} DMG**!"
+                            f" {enemy_disp} struck for **{enemy_dmg} DMG**!"
                         )
                     elif enemy_move == "heavy":
                         enemy_dmg = random.randint(20, 30)
@@ -417,8 +422,8 @@ else:
                             "[HEAVY STRIKE! 💥] ⌐(o_o)"
                         )
                         log_text += (
-                            f" 🛑 {opponent_name} caught you with a heavy strike"
-                            f" for **{enemy_dmg} DMG**!"
+                            f" 🛑 {enemy_disp} landed a heavy strike for"
+                            f" **{enemy_dmg} DMG**!"
                         )
 
                     st.session_state.player_pose += " 😵 [TAKING DAMAGE]"
