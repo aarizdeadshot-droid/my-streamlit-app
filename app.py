@@ -175,7 +175,7 @@ def reset_game(mode="taekwondo"):
     else:
         st.session_state.battle_log = [
             f"⚔️ **Battle Commenced!** {fighter_title} (Muslim Warrior) enters"
-            " battle against Crusader Knight Sir Guy."
+            " Christians."
         ]
         st.session_state.player_pose = "⚔️ (o_o)🛡️ [READY]"
         st.session_state.enemy_pose = "[READY] 🛡️(o_o) 🗡️"
@@ -222,8 +222,8 @@ else:
             st.subheader(f"Match: {full_name} (Blue) vs Sir Ishaq (Red)")
         else:
             st.subheader(
-                f"Battle: {full_name} (Muslim Warrior) vs Crusader Knight Sir"
-                " Guy"
+                f"Battle: {full_name} (Muslim Warrior) vs Cristian"
+                " s"
             )
 
     with g_col2:
@@ -237,13 +237,13 @@ else:
         enemy_label = "🟥 Sir Ishaq"
     else:
         st.markdown("### 🏟️ Crusader Battlefield")
-        enemy_label = "🔴 Crusader Knight Sir Guy"
+        enemy_label = "🔴 Cristians"
 
     with st.container(border=True):
         arena_left, arena_center, arena_right = st.columns([2, 1, 2])
 
         with arena_left:
-            st.markdown(f"#### 🟦 {full_name}")
+            st.markdown(f"#### 🟦 {Muslims}")
             st.code(st.session_state.player_pose, language="text")
 
         with arena_center:
@@ -255,7 +255,7 @@ else:
 
     # Health & Stamina Displays
     opponent_name = "Sir Ishaq" if mode == "taekwondo" else "Sir Guy"
-    st.write(f"**{full_name}'s Health**")
+    st.write(f"**{full_Name}'s Health**")
     st.progress(
         st.session_state.player_hp / 100,
         text=f"HP: {st.session_state.player_hp}/100",
