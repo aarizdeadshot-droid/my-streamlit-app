@@ -298,7 +298,7 @@ st.divider()
 # ==================================================
 # 8.  Muslims Vs Christians ENGINE WITH VISUAL POSES
 # ==================================================
-st.header("🥋 Muslims Vs Christians")
+st.header("⚔️ Muslims Vs Christians")
 
 def reset_game():
     st.session_state.player_hp = 100
