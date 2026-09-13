@@ -323,110 +323,148 @@ else:
             enemy_dmg = 0
             log_text = ""
 
-            # Player Turn
-            if move == "m1":
-                if st.session_state.stamina >= 10:
-                    player_dmg = random.randint(8, 15)
-                    st.session_state.stamina -= 10
+            # Player Turn Logic
+            if mode == "crusades":
+                # ALWAYS WIN LOGIC FOR MUSLIMS MODE:
+                # Attacks deal massive damage and cost minimal/no stamina
+                if move in ["m1", "m2", "m3"]:
+                    player_dmg = random.randint(40, 60)
                     st.session_state.player_pose = (
-                        "🦵 (o_o)/~~ [LIGHT ATTACK!]"
+                        "⚔️ (o_o)/~~ [VICTORIOUS STRIKE!]"
                     )
                     log_text += (
-                        f" {player_disp} landed a hit for **{player_dmg} DMG**!"
+                        f" {player_disp} landed a powerful strike for"
+                        f" **{player_dmg} DMG**!"
                     )
-                else:
-                    st.session_state.player_pose = "(>_<) 💦 [EXHAUSTED]"
-                    log_text += " ⚠️ Out of stamina!"
-
-            elif move == "m2":
-                if st.session_state.stamina >= 20:
-                    st.session_state.stamina -= 20
-                    if random.random() > 0.25:
-                        player_dmg = random.randint(18, 26)
+                elif move == "m4":
+                    st.session_state.stamina = 100
+                    st.session_state.player_pose = "🛡️ (u_u)🛡️ [UNBREAKABLE]"
+                    log_text += (
+                        f" {player_disp} raised their shield and fully restored"
+                        " Stamina!"
+                    )
+            else:
+                # Standard Taekwondo Mode Logic
+                if move == "m1":
+                    if st.session_state.stamina >= 10:
+                        player_dmg = random.randint(8, 15)
+                        st.session_state.stamina -= 10
                         st.session_state.player_pose = (
-                            "💥 (o_o)═🦵 [MEDIUM ATTACK!]"
+                            "🦵 (o_o)/~~ [LIGHT ATTACK!]"
                         )
                         log_text += (
-                            f" 💥 **BOOM!** Attack lands for **{player_dmg}"
-                            " DMG**!"
-                        )
-                    else:
-                        st.session_state.player_pose = "💨 (o_o)_ [MISSED]"
-                        log_text += " 💨 Attack missed!"
-                else:
-                    st.session_state.player_pose = "(>_<) 💦 [EXHAUSTED]"
-                    log_text += " ⚠️ Out of stamina!"
-
-            elif move == "m3":
-                if st.session_state.stamina >= 35:
-                    st.session_state.stamina -= 35
-                    if random.random() > 0.4:
-                        player_dmg = random.randint(30, 42)
-                        st.session_state.player_pose = (
-                            "🌪️ (>o<) [HEAVY ATTACK!]"
-                        )
-                        log_text += (
-                            f" 🌪️ **CRITICAL!** Heavy hit connects for"
+                            f" {player_disp} landed a hit for"
                             f" **{player_dmg} DMG**!"
                         )
                     else:
-                        st.session_state.player_pose = "💨 (~_~) [MISSED]"
-                        log_text += " 💨 Heavy attack missed wide!"
-                else:
-                    st.session_state.player_pose = "(>_<) 💦 [EXHAUSTED]"
-                    log_text += " ⚠️ Out of stamina!"
+                        st.session_state.player_pose = "(>_<) 💦 [EXHAUSTED]"
+                        log_text += " ⚠️ Out of stamina!"
 
-            elif move == "m4":
-                st.session_state.stamina = min(
-                    100, st.session_state.stamina + 35
-                )
-                st.session_state.player_pose = "🛡️ (u_u)🛡️ [GUARDING]"
-                log_text += (
-                    " 🛡️ Raised guard and restored **+35 Stamina**."
-                )
+                elif move == "m2":
+                    if st.session_state.stamina >= 20:
+                        st.session_state.stamina -= 20
+                        if random.random() > 0.25:
+                            player_dmg = random.randint(18, 26)
+                            st.session_state.player_pose = (
+                                "💥 (o_o)═🦵 [MEDIUM ATTACK!]"
+                            )
+                            log_text += (
+                                f" 💥 **BOOM!** Attack lands for"
+                                f" **{player_dmg} DMG**!"
+                            )
+                        else:
+                            st.session_state.player_pose = "💨 (o_o)_ [MISSED]"
+                            log_text += " 💨 Attack missed!"
+                    else:
+                        st.session_state.player_pose = "(>_<) 💦 [EXHAUSTED]"
+                        log_text += " ⚠️ Out of stamina!"
 
-            # Apply Damage
+                elif move == "m3":
+                    if st.session_state.stamina >= 35:
+                        st.session_state.stamina -= 35
+                        if random.random() > 0.4:
+                            player_dmg = random.randint(30, 42)
+                            st.session_state.player_pose = (
+                                "🌪️ (>o<) [HEAVY ATTACK!]"
+                            )
+                            log_text += (
+                                f" 🌪️ **CRITICAL!** Heavy hit connects for"
+                                f" **{player_dmg} DMG**!"
+                            )
+                        else:
+                            st.session_state.player_pose = "💨 (~_~) [MISSED]"
+                            log_text += " 💨 Heavy attack missed wide!"
+                    else:
+                        st.session_state.player_pose = "(>_<) 💦 [EXHAUSTED]"
+                        log_text += " ⚠️ Out of stamina!"
+
+                elif move == "m4":
+                    st.session_state.stamina = min(
+                        100, st.session_state.stamina + 35
+                    )
+                    st.session_state.player_pose = "🛡️ (u_u)🛡️ [GUARDING]"
+                    log_text += (
+                        " 🛡️ Raised guard and restored **+35 Stamina**."
+                    )
+
+            # Apply Damage to Enemy
             st.session_state.enemy_hp = max(
                 0, st.session_state.enemy_hp - player_dmg
             )
             if player_dmg > 0:
                 st.session_state.enemy_pose = "[HIT! 💥] (><;)"
 
-            # Enemy Counter-Attack
+            # Enemy Counter-Attack Logic
             if st.session_state.enemy_hp > 0:
-                enemy_move = random.choice(["light", "medium", "heavy"])
-
-                if move == "m4":
-                    enemy_dmg = random.randint(2, 6)
-                    st.session_state.enemy_pose = "[BLOCKED!] 🦵 ⌐(o_o)"
+                if mode == "crusades":
+                    # Enemy attacks always deal 0 damage in Crusades Mode
+                    enemy_dmg = 0
+                    st.session_state.enemy_pose = "[ATTACK BLOCKED!] 🗡️ ⌐(o_o)"
                     log_text += (
-                        f" {enemy_disp} attacked, but guard absorbed it!"
-                        f" Took only **{enemy_dmg} DMG**."
+                        f" {enemy_disp} attempted to counter-attack, but"
+                        " dealt **0 DMG**!"
                     )
                 else:
-                    if enemy_move == "light":
-                        enemy_dmg = random.randint(6, 12)
-                        st.session_state.enemy_pose = "[ATTACK!] 🥊 ⌐(o_o)"
-                        log_text += (
-                            f" {enemy_disp} hit back for **{enemy_dmg} DMG**."
-                        )
-                    elif enemy_move == "medium":
-                        enemy_dmg = random.randint(12, 20)
-                        st.session_state.enemy_pose = "[STRIKE!] 🦵 ⌐(o_o)"
-                        log_text += (
-                            f" {enemy_disp} struck for **{enemy_dmg} DMG**!"
-                        )
-                    elif enemy_move == "heavy":
-                        enemy_dmg = random.randint(20, 30)
-                        st.session_state.enemy_pose = (
-                            "[HEAVY STRIKE! 💥] ⌐(o_o)"
-                        )
-                        log_text += (
-                            f" 🛑 {enemy_disp} landed a heavy strike for"
-                            f" **{enemy_dmg} DMG**!"
-                        )
+                    # Standard Taekwondo Mode Enemy Logic
+                    enemy_move = random.choice(["light", "medium", "heavy"])
 
-                    st.session_state.player_pose += " 😵 [TAKING DAMAGE]"
+                    if move == "m4":
+                        enemy_dmg = random.randint(2, 6)
+                        st.session_state.enemy_pose = "[BLOCKED!] 🦵 ⌐(o_o)"
+                        log_text += (
+                            f" {enemy_disp} attacked, but guard absorbed it!"
+                            f" Took only **{enemy_dmg} DMG**."
+                        )
+                    else:
+                        if enemy_move == "light":
+                            enemy_dmg = random.randint(6, 12)
+                            st.session_state.enemy_pose = (
+                                "[ATTACK!] 🥊 ⌐(o_o)"
+                            )
+                            log_text += (
+                                f" {enemy_disp} hit back for **{enemy_dmg}"
+                                " DMG**."
+                            )
+                        elif enemy_move == "medium":
+                            enemy_dmg = random.randint(12, 20)
+                            st.session_state.enemy_pose = (
+                                "[STRIKE!] 🦵 ⌐(o_o)"
+                            )
+                            log_text += (
+                                f" {enemy_disp} struck for **{enemy_dmg}"
+                                " DMG**!"
+                            )
+                        elif enemy_move == "heavy":
+                            enemy_dmg = random.randint(20, 30)
+                            st.session_state.enemy_pose = (
+                                "[HEAVY STRIKE! 💥] ⌐(o_o)"
+                            )
+                            log_text += (
+                                f" 🛑 {enemy_disp} landed a heavy strike for"
+                                f" **{enemy_dmg} DMG**!"
+                            )
+
+                        st.session_state.player_pose += " 😵 [TAKING DAMAGE]"
 
                 st.session_state.player_hp = max(
                     0, st.session_state.player_hp - enemy_dmg
