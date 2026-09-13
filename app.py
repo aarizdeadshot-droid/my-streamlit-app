@@ -79,6 +79,7 @@ with col_right2:
             "Photography 📷",
             "Music 🎵",
             "Art 🎨",
+            
         ],
         default=["Coding 💻"],
     )
