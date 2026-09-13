@@ -485,10 +485,7 @@ else:
 with st.sidebar:
     st.title("⚙️ System Control")
     st.write(
+    "💡Tip : Press the upper left arrow onmobiles to close the menu and play it with fullscreen to enjoy.")
+    st.write(
         "This application dynamically builds custom profile cards using raw"
-        " input data variables."
-    )
-with st.sidebar:
-st.write(
-    "💡Tip : Press the upper left arrow onmobiles to close the menu and play it with fullscreen to enjoy "
-)
+        " input data variables.")
