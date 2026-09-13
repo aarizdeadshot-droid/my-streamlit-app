@@ -61,7 +61,7 @@ col_left2, col_right2 = st.columns(2)
 
 with col_left2:
     school_name = st.text_input(
-        "School / College / University Name",
+        "School / College / University / Office Name",
         placeholder="e.g. Army Public School",
     )
     fav_subject = st.text_input(
