@@ -84,8 +84,8 @@ with col_right2:
             "Photography 📷",
             "Music 🎵",
             "Art 🎨",
-            "Sleeping"
-            "Working"
+            "Sleeping😴",
+            "Working at 🏠",
         ],
         default=["Coding 💻"],
     )
