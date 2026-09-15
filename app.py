@@ -50,7 +50,7 @@ with col_right:
         [
             "PlayGroup-Kindergarten",
             "Class 1-4",
-            "Class 5-8"
+            "Class 5-8",
             "Class 9-10 (Matric / O-Levels)",
             "Class 11-12 (Inter / A-Levels)",
             "University Student",
