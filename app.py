@@ -522,6 +522,9 @@ else:
 # 8. Sidebar Information Terminal
 with st.sidebar:
     st.title("⚙️ System Control")
+    st.write("💡Tip : Click the the upper left arrow to collapse the menu on mobile"
+             "to enjoy the app by full screen."
+            )
     st.write(
         "This application dynamically builds custom profile cards using raw"
         " input data variables."
