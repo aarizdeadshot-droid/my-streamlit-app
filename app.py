@@ -15,12 +15,13 @@ if "card_generated" not in st.session_state:
 if "game_active" not in st.session_state:
     st.session_state.game_active = False
     st.session_state.game_mode = "taekwondo"
+    st.session_state.chosen_faction = "Muslims"
     st.session_state.player_hp = 100
     st.session_state.enemy_hp = 100
     st.session_state.stamina = 100
     st.session_state.battle_log = []
-    st.session_state.player_pose = "🤺 READY"
-    st.session_state.enemy_pose = "READY 🤺"
+    st.session_state.player_pose = "READY"
+    st.session_state.enemy_pose = "READY"
 
 # 2. Developer Intro
 st.title("The Aariz Developer ✨")
@@ -61,8 +62,8 @@ col_left2, col_right2 = st.columns(2)
 
 with col_left2:
     school_name = st.text_input(
-        "School / College / University / Office Name / Work",
-        placeholder="e.g. Python Programmer",
+        "School / College / University Name",
+        placeholder="e.g. Army Public School",
     )
     fav_subject = st.text_input(
         "Favorite Subject", placeholder="e.g. Computer Science"
@@ -79,10 +80,6 @@ with col_right2:
             "Photography 📷",
             "Music 🎵",
             "Art 🎨",
-            "Working At 🏠",
-            "Sleeping 😴",
-            "Doing Nothing 😶",
-            
         ],
         default=["Coding 💻"],
     )
@@ -119,13 +116,12 @@ if st.button("🔥 Create My Profile Card", use_container_width=True):
         st.session_state.card_generated = False
     else:
         st.session_state.card_generated = True
-        st.balloons()
 
 if st.session_state.card_generated:
     st.success("🎉 Your digital card is ready!")
     with st.container(border=True):
         st.markdown(f"## 🪪 {full_name.upper()}")
-        st.markdown(f"**🏫 Institution or Work:** {school_name}")
+        st.markdown(f"**🏫 Institution:** {school_name}")
 
         c1, c2, c3 = st.columns(3)
         with c1:
@@ -148,11 +144,7 @@ if st.session_state.card_generated:
             f"✉️ **Contact:** {email if email else 'No email provided'}"
         )
         if WhatsApp_Number:
-            clean_num = "".join(filter(str.isdigit, WhatsApp_Number))
-            st.markdown(
-                f"🔗 **WhatsApp:**"
-                f" [{WhatsApp_Number}](https://wa.me/{clean_num})"
-            )
+            st.markdown(f"📱 **WhatsApp Number:** {WhatsApp_Number}")
 
 st.divider()
 
@@ -162,8 +154,9 @@ st.divider()
 st.header("🎮 Combat Arenas")
 
 
-def reset_game(mode="taekwondo"):
+def reset_game(mode="taekwondo", faction="Muslims"):
     st.session_state.game_mode = mode
+    st.session_state.chosen_faction = faction
     st.session_state.player_hp = 100
     st.session_state.enemy_hp = 100
     st.session_state.stamina = 100
@@ -177,9 +170,10 @@ def reset_game(mode="taekwondo"):
         st.session_state.player_pose = "(o_o)¬ 🥋 [READY]"
         st.session_state.enemy_pose = "[READY] 🥋 ⌐(o_o)"
     else:
+        enemy_faction = "Christians" if faction == "Muslims" else "Muslims"
         st.session_state.battle_log = [
-            "⚔️ **Battle Commenced!** Muslims face off against Christians in"
-            " combat!"
+            f"⚔️ **Battle Commenced!** You chose **{faction}** vs"
+            f" **{enemy_faction}**!"
         ]
         st.session_state.player_pose = "⚔️ (o_o)🛡️ [READY]"
         st.session_state.enemy_pose = "[READY] 🛡️(o_o) 🗡️"
@@ -188,6 +182,13 @@ def reset_game(mode="taekwondo"):
 
 
 if not st.session_state.game_active:
+    # Faction selector for the historical fight
+    faction_choice = st.radio(
+        "Choose your side for Muslims vs Christians battle:",
+        ["Muslims", "Christians"],
+        horizontal=True,
+    )
+
     btn_col1, btn_col2 = st.columns(2)
 
     with btn_col1:
@@ -204,7 +205,7 @@ if not st.session_state.game_active:
 
     with btn_col2:
         if st.button(
-            "⚔️ Start Muslims vs Christians Fight", use_container_width=True
+            f"⚔️ Start Fight as {faction_choice}", use_container_width=True
         ):
             if not full_name or not school_name or not email:
                 st.warning(
@@ -213,19 +214,20 @@ if not st.session_state.game_active:
                     " 1–3 before starting!"
                 )
             else:
-                reset_game("crusades")
+                reset_game("crusades", faction_choice)
                 st.rerun()
 
 else:
     mode = st.session_state.game_mode
+    faction = st.session_state.chosen_faction
 
-    # Set Display Names based on selected mode
+    # Set Display Names based on mode and chosen faction
     if mode == "taekwondo":
         player_disp = full_name if full_name else "Player"
         enemy_disp = "Sir Ishaq"
     else:
-        player_disp = "Muslims"
-        enemy_disp = "Christians"
+        player_disp = f"Player ({faction})"
+        enemy_disp = "Christians" if faction == "Muslims" else "Muslims"
 
     # Game Header Controls
     g_col1, g_col2 = st.columns([3, 1])
@@ -233,11 +235,11 @@ else:
         if mode == "taekwondo":
             st.subheader(f"Match: {player_disp} (Blue) vs Sir Ishaq (Red)")
         else:
-            st.subheader("Battle: Muslims vs Christians")
+            st.subheader(f"Battle: {faction} vs {enemy_disp}")
 
     with g_col2:
         if st.button("🔄 Reset Match"):
-            reset_game(mode)
+            reset_game(mode, faction)
             st.rerun()
 
     # VISUAL ARENA
@@ -284,10 +286,7 @@ else:
         st.session_state.enemy_pose = "🏆 ⌐(>_<) [WINNER]"
         st.session_state.game_active = False
     elif st.session_state.enemy_hp <= 0:
-        st.balloons()
-        st.success(
-            f"🏆 **VICTORY!** {player_disp} defeated {enemy_disp} in combat!"
-        )
+        st.success("🏆 **VICTORY!** Muslims defeated Christians in combat!")
         st.session_state.player_pose = "🏆 (^_^) 🥋 [WINNER]"
         st.session_state.enemy_pose = "[KO'D] 😵 (x_x)"
         st.session_state.game_active = False
@@ -312,13 +311,13 @@ else:
             ):
                 move = "m4"
         else:
-            if m1.button("🗡️ Scimitar Slash", help="Fast strike, low cost"):
+            if m1.button("🗡️ Slash Attack", help="Fast strike, low cost"):
                 move = "m1"
-            if m2.button("🛡️ Shield Bash", help="Moderate damage"):
+            if m2.button("🛡️ Shield Strike", help="Moderate damage"):
                 move = "m2"
-            if m3.button("🐎 Cavalry Charge", help="Heavy damage"):
+            if m3.button("🐎 Heavy Charge", help="Heavy damage"):
                 move = "m3"
-            if m4.button("🏰 Defensive Guard", help="Restores stamina"):
+            if m4.button("🏰 Defense", help="Restores stamina"):
                 move = "m4"
 
         # Combat Logic & Pose Animation Updates
@@ -329,26 +328,35 @@ else:
 
             # Player Turn Logic
             if mode == "crusades":
-                # ALWAYS WIN LOGIC FOR MUSLIMS MODE:
-                # Attacks deal massive damage and cost minimal/no stamina
-                if move in ["m1", "m2", "m3"]:
-                    player_dmg = random.randint(40, 60)
-                    st.session_state.player_pose = (
-                        "⚔️ (o_o)/~~ [VICTORIOUS STRIKE!]"
-                    )
+                if faction == "Muslims":
+                    # Player is Muslims: High damage, invincible
+                    if move in ["m1", "m2", "m3"]:
+                        player_dmg = random.randint(40, 60)
+                        st.session_state.player_pose = (
+                            "⚔️ (o_o)/~~ [VICTORIOUS STRIKE!]"
+                        )
+                        log_text += (
+                            " Muslims landed a powerful strike for"
+                            f" **{player_dmg} DMG**!"
+                        )
+                    elif move == "m4":
+                        st.session_state.stamina = 100
+                        st.session_state.player_pose = (
+                            "🛡️ (u_u)🛡️ [UNBREAKABLE]"
+                        )
+                        log_text += (
+                            " Muslims raised shield and fully restored Stamina!"
+                        )
+                else:
+                    # Player is Christians: Attacks fail / zero damage
+                    player_dmg = 0
+                    st.session_state.player_pose = "💨 (~_~) [ATTACK BLOCKED]"
                     log_text += (
-                        f" {player_disp} landed a powerful strike for"
-                        f" **{player_dmg} DMG**!"
-                    )
-                elif move == "m4":
-                    st.session_state.stamina = 100
-                    st.session_state.player_pose = "🛡️ (u_u)🛡️ [UNBREAKABLE]"
-                    log_text += (
-                        f" {player_disp} raised their shield and fully restored"
-                        " Stamina!"
+                        " Christians attacked, but Muslims blocked all"
+                        " damage!"
                     )
             else:
-                # Standard Taekwondo Mode Logic
+                # Taekwondo Mode Logic
                 if move == "m1":
                     if st.session_state.stamina >= 10:
                         player_dmg = random.randint(8, 15)
@@ -421,15 +429,28 @@ else:
             # Enemy Counter-Attack Logic
             if st.session_state.enemy_hp > 0:
                 if mode == "crusades":
-                    # Enemy attacks always deal 0 damage in Crusades Mode
-                    enemy_dmg = 0
-                    st.session_state.enemy_pose = "[ATTACK BLOCKED!] 🗡️ ⌐(o_o)"
-                    log_text += (
-                        f" {enemy_disp} attempted to counter-attack, but"
-                        " dealt **0 DMG**!"
-                    )
+                    if faction == "Muslims":
+                        # Christians attack, 0 damage
+                        enemy_dmg = 0
+                        st.session_state.enemy_pose = (
+                            "[ATTACK BLOCKED!] 🗡️ ⌐(o_o)"
+                        )
+                        log_text += (
+                            " Christians attempted to counter-attack, but"
+                            " dealt **0 DMG**!"
+                        )
+                    else:
+                        # Muslims attack Christian player, heavy winning damage
+                        enemy_dmg = random.randint(40, 60)
+                        st.session_state.enemy_pose = (
+                            "[CRITICAL HIT! 💥] 🗡️ ⌐(o_o)"
+                        )
+                        log_text += (
+                            " Muslims counter-attacked and landed a critical"
+                            f" strike for **{enemy_dmg} DMG**!"
+                        )
                 else:
-                    # Standard Taekwondo Mode Enemy Logic
+                    # Taekwondo enemy counter
                     enemy_move = random.choice(["light", "medium", "heavy"])
 
                     if move == "m4":
@@ -488,7 +509,6 @@ else:
 with st.sidebar:
     st.title("⚙️ System Control")
     st.write(
-    "💡Tip : Press the upper left arrow on mobiles to close the menu and play it with fullscreen to enjoy.")
-    st.write(
         "This application dynamically builds custom profile cards using raw"
-        " input data variables.")
+        " input data variables."
+    )
