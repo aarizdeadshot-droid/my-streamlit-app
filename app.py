@@ -12,6 +12,9 @@ st.set_page_config(
 if "card_generated" not in st.session_state:
     st.session_state.card_generated = False
 
+if "choosing_faction" not in st.session_state:
+    st.session_state.choosing_faction = False
+
 if "game_active" not in st.session_state:
     st.session_state.game_active = False
     st.session_state.game_mode = "taekwondo"
@@ -46,7 +49,8 @@ with col_right:
         "Current Class / Grade",
         [
             "PlayGroup-Kindergarten",
-            "Class 1-8",
+            "Class 1-4",
+            "Class 5-8"
             "Class 9-10 (Matric / O-Levels)",
             "Class 11-12 (Inter / A-Levels)",
             "University Student",
@@ -80,6 +84,8 @@ with col_right2:
             "Photography 📷",
             "Music 🎵",
             "Art 🎨",
+            "Sleeping"
+            "Working"
         ],
         default=["Coding 💻"],
     )
@@ -178,17 +184,11 @@ def reset_game(mode="taekwondo", faction="Muslims"):
         st.session_state.player_pose = "⚔️ (o_o)🛡️ [READY]"
         st.session_state.enemy_pose = "[READY] 🛡️(o_o) 🗡️"
 
+    st.session_state.choosing_faction = False
     st.session_state.game_active = True
 
 
 if not st.session_state.game_active:
-    # Faction selector for the historical fight
-    faction_choice = st.radio(
-        "Choose your side for Muslims vs Christians battle:",
-        ["Muslims", "Christians"],
-        horizontal=True,
-    )
-
     btn_col1, btn_col2 = st.columns(2)
 
     with btn_col1:
@@ -205,7 +205,7 @@ if not st.session_state.game_active:
 
     with btn_col2:
         if st.button(
-            f"⚔️ Start Fight as {faction_choice}", use_container_width=True
+            "⚔️ Muslims vs Christians Fight", use_container_width=True
         ):
             if not full_name or not school_name or not email:
                 st.warning(
@@ -214,14 +214,27 @@ if not st.session_state.game_active:
                     " 1–3 before starting!"
                 )
             else:
-                reset_game("crusades", faction_choice)
-                st.rerun()
+                st.session_state.choosing_faction = True
+
+    # Side-Selection options appear after clicking "Muslims vs Christians Fight"
+    if st.session_state.choosing_faction:
+        with st.container(border=True):
+            st.markdown("### 🛡️ Choose Your Side")
+            f_col1, f_col2 = st.columns(2)
+            with f_col1:
+                if st.button("🌙 Play as Muslims", use_container_width=True):
+                    reset_game("crusades", "Muslims")
+                    st.rerun()
+            with f_col2:
+                if st.button("✝️ Play as Christians", use_container_width=True):
+                    reset_game("crusades", "Christians")
+                    st.rerun()
 
 else:
     mode = st.session_state.game_mode
     faction = st.session_state.chosen_faction
 
-    # Set Display Names based on mode and chosen faction
+    # Display names based on mode and chosen faction
     if mode == "taekwondo":
         player_disp = full_name if full_name else "Player"
         enemy_disp = "Sir Ishaq"
@@ -239,7 +252,8 @@ else:
 
     with g_col2:
         if st.button("🔄 Reset Match"):
-            reset_game(mode, faction)
+            st.session_state.game_active = False
+            st.session_state.choosing_faction = False
             st.rerun()
 
     # VISUAL ARENA
