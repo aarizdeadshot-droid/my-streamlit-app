@@ -3,7 +3,7 @@ import streamlit as st
 
 # 1. Page Configuration
 st.set_page_config(
-    page_title="The Aariz Developer | Student Hub",
+    st.title="The Aariz Developer | Student Hub",
     page_icon="✨",
     layout="centered",
 )
@@ -27,7 +27,7 @@ if "game_active" not in st.session_state:
     st.session_state.enemy_pose = "READY"
 
 # 2. Developer Intro 
-COVER_IMAGE = "Screenshot 2026-9-17 151004.png"
+COVER_IMAGE = "Screenshot 2026-9-17 151004.jpg"
 st.subheader("Interactive Student Profile & Bio Builder")
 st.write(
     "Fill out the details below to generate a beautiful, shareable digital"
