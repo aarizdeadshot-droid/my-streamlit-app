@@ -26,13 +26,8 @@ if "game_active" not in st.session_state:
     st.session_state.player_pose = "READY"
     st.session_state.enemy_pose = "READY"
 
-# 2. Developer Intro & Cover Image
-st.title("The Aariz Developer ✨")
-
-# --- ADD YOUR COVER IMAGE HERE ---
-COVER_IMAGE_SOURCE = "Screenshot 2026-9-17 151004" 
-
-
+# 2. Developer Intro 
+COVER_IMAGE = "Screenshot 2026-9-17 151004.png"
 st.subheader("Interactive Student Profile & Bio Builder")
 st.write(
     "Fill out the details below to generate a beautiful, shareable digital"
