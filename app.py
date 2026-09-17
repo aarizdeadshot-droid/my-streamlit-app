@@ -26,8 +26,19 @@ if "game_active" not in st.session_state:
     st.session_state.player_pose = "READY"
     st.session_state.enemy_pose = "READY"
 
-# 2. Developer Intro
+# 2. Developer Intro & Cover Image
 st.title("The Aariz Developer ✨")
+
+# --- ADD YOUR COVER IMAGE HERE ---
+# Replace "cover.jpg" with your local file path (e.g. "cover.png") or image URL
+COVER_IMAGE_SOURCE = "cover.jpg" 
+
+try:
+    st.image(COVER_IMAGE_SOURCE, use_container_width=True)
+except Exception:
+    # Fallback placeholder if image file is not found
+    st.warning("⚠️ Cover image file not found. Please update 'COVER_IMAGE_SOURCE' with your image file path or URL.")
+
 st.subheader("Interactive Student Profile & Bio Builder")
 st.write(
     "Fill out the details below to generate a beautiful, shareable digital"
@@ -522,8 +533,8 @@ else:
 # 8. Sidebar Information Terminal
 with st.sidebar:
     st.title("⚙️ System Control")
-    st.write("💡Tip : Click the the upper left arrow to collapse the menu on mobile"
-             "to enjoy the app by full screen."
+    st.write("💡Tip : Click the upper left arrow to collapse the menu on mobile "
+             "to enjoy the app in full screen."
             )
     st.write(
         "This application dynamically builds custom profile cards using raw"
