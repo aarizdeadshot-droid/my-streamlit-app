@@ -32,8 +32,6 @@ st.title("The Aariz Developer ✨")
 # --- ADD YOUR COVER IMAGE HERE ---
 COVER_IMAGE_SOURCE = "Screenshot 2026-9-17 151004" 
 
-try:
-    st.image(COVER_IMAGE_SOURCE, use_container_width=True)
 
 st.subheader("Interactive Student Profile & Bio Builder")
 st.write(
