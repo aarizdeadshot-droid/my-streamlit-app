@@ -30,10 +30,10 @@ if "game_active" not in st.session_state:
 st.title("The Aariz Developer ✨")
 
 # --- ADD YOUR COVER IMAGE HERE ---
-# Replace "cover.jpg" with your local file path (e.g. "cover.png") or image URL
 COVER_IMAGE_SOURCE = "Screenshot 2026-9-17 151004" 
 
-print(COVER_IMAGE_SOURCE)
+try:
+    st.image(COVER_IMAGE_SOURCE, use_container_width=True)
 
 st.subheader("Interactive Student Profile & Bio Builder")
 st.write(
@@ -49,7 +49,7 @@ col_left, col_right = st.columns(2)
 
 with col_left:
     full_name = st.text_input("Full Name", placeholder="e.g. Aariz Bin Azmat")
-    age = st.number_input("Age", min_value=5, max_value=100, value=16, step=1)
+    age = st.number_input("Age", min_value=5, max_value=122, value=16, step=1)
 
 with col_right:
     student_class = st.selectbox(
