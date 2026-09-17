@@ -27,7 +27,7 @@ if "game_active" not in st.session_state:
     st.session_state.enemy_pose = "READY"
 
 # 2. Developer Intro 
-COVER_IMAGE = "Screenshot 2026-9-17 151004.jpg"
+COVER_IMAGE = "Aariz.png"
 st.subheader("Interactive Student Profile & Bio Builder")
 st.write(
     "Fill out the details below to generate a beautiful, shareable digital"
