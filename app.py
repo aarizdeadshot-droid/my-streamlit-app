@@ -31,7 +31,7 @@ st.title("The Aariz Developer ✨")
 
 # --- ADD YOUR COVER IMAGE HERE ---
 # Replace "cover.jpg" with your local file path (e.g. "cover.png") or image URL
-COVER_IMAGE_SOURCE = "cover.jpg" 
+COVER_IMAGE_SOURCE = "Screenshot 2026-9-17 151004" 
 
 try:
     st.image(COVER_IMAGE_SOURCE, use_container_width=True)
