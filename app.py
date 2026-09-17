@@ -33,11 +33,7 @@ st.title("The Aariz Developer ✨")
 # Replace "cover.jpg" with your local file path (e.g. "cover.png") or image URL
 COVER_IMAGE_SOURCE = "Screenshot 2026-9-17 151004" 
 
-try:
-    st.image(COVER_IMAGE_SOURCE, use_container_width=True)
-except Exception:
-    # Fallback placeholder if image file is not found
-    st.warning("⚠️ Cover image file not found. Please update 'COVER_IMAGE_SOURCE' with your image file path or URL.")
+print(COVER_IMAGE_SOURCE)
 
 st.subheader("Interactive Student Profile & Bio Builder")
 st.write(
