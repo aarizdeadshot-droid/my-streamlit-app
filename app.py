@@ -28,6 +28,8 @@ if "game_active" not in st.session_state:
 
 # 2. Developer Intro 
 COVER_IMAGE = "Aariz.png"
+print(Aariz.png)
+st.title("Aariz The Developer")
 st.subheader("Interactive Student Profile & Bio Builder")
 st.write(
     "Fill out the details below to generate a beautiful, shareable digital"
