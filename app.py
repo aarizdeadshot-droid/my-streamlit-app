@@ -87,7 +87,7 @@ with col_right2:
             "Sleeping😴",
             "Working at 🏠",
         ],
-        default=["Sleeping 😴"],
+        default=["Sleeping😴"],
     )
     bio = st.text_area(
         "Bio",
