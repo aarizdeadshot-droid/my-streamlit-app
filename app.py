@@ -48,7 +48,7 @@ with col_right:
     student_class = st.selectbox(
         "Current Class / Grade",
         [
-            "PlayGroup-Kindergarten",
+            "PlayGroup-Kindergarten (Prep School)",
             "Class 1-4 (Primary School)",
             "Class 5-8(Middle School)",
             "Class 9-10 (Matric / O-Levels / High School)",
@@ -66,11 +66,11 @@ col_left2, col_right2 = st.columns(2)
 
 with col_left2:
     school_name = st.text_input(
-        "School / College / University Name",
+        "School / College / University Name / Work / Office",
         placeholder="e.g. Army Public School",
     )
     fav_subject = st.text_input(
-        "Favorite Subject", placeholder="e.g. Computer Science"
+        "Favorite Subject", placeholder="e.g. Mathematics"
     )
 
 with col_right2:
@@ -87,7 +87,7 @@ with col_right2:
             "Sleeping😴",
             "Working at 🏠",
         ],
-        default=["Coding 💻"],
+        default=["Sleeping 😴"],
     )
     bio = st.text_area(
         "Bio",
@@ -105,7 +105,7 @@ with col_left3:
     email = st.text_input("Email Address", placeholder="yourname@example.com")
 with col_right3:
     WhatsApp_Number = st.text_input(
-        "WhatsApp Number", placeholder="e.g. +923001234567"
+        "WhatsApp Number", placeholder="e.g. +92 3465334049"
     )
 
 st.divider()
@@ -113,7 +113,7 @@ st.divider()
 # 6. Profile Card Generation
 st.header("🪪 Generated Digital Profile Card")
 
-if st.button("🔥 Create My Profile Card", use_container_width=True):
+if st.button("🔥 Generate My Digital Card", use_container_width=True):
     if not full_name:
         st.error("❌ Please enter your **Full Name** in Step 1.")
         st.session_state.card_generated = False
@@ -127,7 +127,7 @@ if st.session_state.card_generated:
     st.success("🎉 Your digital card is ready!")
     with st.container(border=True):
         st.markdown(f"## 🪪 {full_name.upper()}")
-        st.markdown(f"**🏫 Institution:** {school_name}")
+        st.markdown(f"**🏫 Institution(work):** {school_name}")
 
         c1, c2, c3 = st.columns(3)
         with c1:
