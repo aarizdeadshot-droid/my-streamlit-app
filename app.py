@@ -3,7 +3,7 @@ import streamlit as st
 
 # 1. Page Configuration
 st.set_page_config(
-    page_title="The Aariz Developer | Student Hub",
+    page_title="The Aariz Python Web",
     page_icon="✨",
     layout="centered",
 )
