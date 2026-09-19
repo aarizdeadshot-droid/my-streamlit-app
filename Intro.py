@@ -26,8 +26,25 @@ if "game_active" not in st.session_state:
     st.session_state.player_pose = "READY"
     st.session_state.enemy_pose = "READY"
 
-# 2. Developer Intro
+# 2. Developer Intro & Cover Image
 st.title("The Aariz Developer ✨")
+
+# -------------------------------------------------------------
+# 🖼️ COVER IMAGE CONFIGURATION
+# 1. Put your screenshot in the same folder as this script.
+# 2. Change "cover.png" to your screenshot's exact filename.
+# -------------------------------------------------------------
+COVER_IMAGE_SOURCE = "cover.png" 
+
+# Check for custom sidebar upload first, then fall back to local file
+if "uploaded_cover" in st.session_state and st.session_state.uploaded_cover is not None:
+    st.image(st.session_state.uploaded_cover, use_container_width=True)
+else:
+    try:
+        st.image(COVER_IMAGE_SOURCE, use_container_width=True)
+    except Exception:
+        st.info("💡 **Tip:** Place your screenshot image in the project folder and name it `cover.png`, or upload it using the sidebar menu on the left.")
+
 st.subheader("Interactive Student Profile & Bio Builder")
 st.write(
     "Fill out the details below to generate a beautiful, shareable digital"
@@ -48,7 +65,7 @@ with col_right:
     student_class = st.selectbox(
         "Current Class / Grade",
         [
-            "PlayGroup-Kindergarten (Prep School)",
+            "PlayGroup-Kindergarten",
             "Class 1-4 (Primary School)",
             "Class 5-8(Middle School)",
             "Class 9-10 (Matric / O-Levels / High School)",
@@ -66,11 +83,11 @@ col_left2, col_right2 = st.columns(2)
 
 with col_left2:
     school_name = st.text_input(
-        "School / College / University Name / Work / Office",
+        "School / College / University Name",
         placeholder="e.g. Army Public School",
     )
     fav_subject = st.text_input(
-        "Favorite Subject", placeholder="e.g. Mathematics"
+        "Favorite Subject", placeholder="e.g. Computer Science"
     )
 
 with col_right2:
@@ -87,7 +104,7 @@ with col_right2:
             "Sleeping😴",
             "Working at 🏠",
         ],
-        default=["Sleeping😴"],
+        default=["Coding 💻"],
     )
     bio = st.text_area(
         "Bio",
@@ -105,7 +122,7 @@ with col_left3:
     email = st.text_input("Email Address", placeholder="yourname@example.com")
 with col_right3:
     WhatsApp_Number = st.text_input(
-        "WhatsApp Number", placeholder="e.g. +92 3465334049"
+        "WhatsApp Number", placeholder="e.g. +923001234567"
     )
 
 st.divider()
@@ -113,7 +130,7 @@ st.divider()
 # 6. Profile Card Generation
 st.header("🪪 Generated Digital Profile Card")
 
-if st.button("🔥 Generate My Digital Card", use_container_width=True):
+if st.button("🔥 Create My Profile Card", use_container_width=True):
     if not full_name:
         st.error("❌ Please enter your **Full Name** in Step 1.")
         st.session_state.card_generated = False
@@ -127,7 +144,7 @@ if st.session_state.card_generated:
     st.success("🎉 Your digital card is ready!")
     with st.container(border=True):
         st.markdown(f"## 🪪 {full_name.upper()}")
-        st.markdown(f"**🏫 Institution(work):** {school_name}")
+        st.markdown(f"**🏫 Institution:** {school_name}")
 
         c1, c2, c3 = st.columns(3)
         with c1:
@@ -175,6 +192,13 @@ def reset_game(mode="taekwondo", faction="Muslims"):
         ]
         st.session_state.player_pose = "(o_o)¬ 🥋 [READY]"
         st.session_state.enemy_pose = "[READY] 🥋 ⌐(o_o)"
+    elif mode == "heist":
+        agent_title = full_name.upper() if full_name else "AGENT"
+        st.session_state.battle_log = [
+            f"🌃 **Heist Commenced!** {agent_title} infiltrating Aethelgard Cyber Tower."
+        ]
+        st.session_state.player_pose = "🕵️ (o_o) [INFILTRATING]"
+        st.session_state.enemy_pose = "[ALERT 0%] 🚨 🤖"
     else:
         enemy_faction = "Christians" if faction == "Muslims" else "Muslims"
         st.session_state.battle_log = [
@@ -189,7 +213,7 @@ def reset_game(mode="taekwondo", faction="Muslims"):
 
 
 if not st.session_state.game_active:
-    btn_col1, btn_col2 = st.columns(2)
+    btn_col1, btn_col2, btn_col3 = st.columns(3)
 
     with btn_col1:
         if st.button("🥋 Start Taekwondo Game", use_container_width=True):
@@ -216,6 +240,18 @@ if not st.session_state.game_active:
             else:
                 st.session_state.choosing_faction = True
 
+    with btn_col3:
+        if st.button("🌃 Start Cyber Heist", use_container_width=True):
+            if not full_name or not school_name or not email:
+                st.warning(
+                    "⚠️ **Access Denied!** You must fill in your **Full"
+                    " Name**, **School Name**, and **Email Address** in Steps"
+                    " 1–3 before starting!"
+                )
+            else:
+                reset_game("heist")
+                st.rerun()
+
     # Side-Selection options appear after clicking "Muslims vs Christians Fight"
     if st.session_state.choosing_faction:
         with st.container(border=True):
@@ -238,6 +274,9 @@ else:
     if mode == "taekwondo":
         player_disp = full_name if full_name else "Player"
         enemy_disp = "Sir Ishaq"
+    elif mode == "heist":
+        player_disp = full_name if full_name else "Agent"
+        enemy_disp = "Cyber Security Grid"
     else:
         player_disp = f"Player ({faction})"
         enemy_disp = "Christians" if faction == "Muslims" else "Muslims"
@@ -247,6 +286,8 @@ else:
     with g_col1:
         if mode == "taekwondo":
             st.subheader(f"Match: {player_disp} (Blue) vs Sir Ishaq (Red)")
+        elif mode == "heist":
+            st.subheader(f"Cyber Heist: {player_disp} vs Aethelgard Tower Security")
         else:
             st.subheader(f"Battle: {faction} vs {enemy_disp}")
 
@@ -260,6 +301,9 @@ else:
     if mode == "taekwondo":
         st.markdown("### 🏟️ Taekwondo Arena")
         enemy_label = f"🟥 {enemy_disp}"
+    elif mode == "heist":
+        st.markdown("### 🌃 Vault Infiltration Grid")
+        enemy_label = f"🤖 {enemy_disp}"
     else:
         st.markdown("### 🏟️ Battlefield")
         enemy_label = f"🔴 {enemy_disp}"
@@ -279,28 +323,49 @@ else:
             st.code(st.session_state.enemy_pose, language="text")
 
     # Health & Stamina Displays
-    st.write(f"**{player_disp}'s Health**")
-    st.progress(
-        st.session_state.player_hp / 100,
-        text=f"HP: {st.session_state.player_hp}/100",
-    )
+    if mode == "heist":
+        st.write(f"**{player_disp}'s Stealth HP**")
+        st.progress(
+            st.session_state.player_hp / 100,
+            text=f"Stealth HP: {st.session_state.player_hp}/100",
+        )
 
-    st.write(f"**{enemy_disp}'s Health**")
-    st.progress(
-        st.session_state.enemy_hp / 100,
-        text=f"HP: {st.session_state.enemy_hp}/100",
-    )
+        st.write(f"**{enemy_disp}'s Firewall Structure**")
+        st.progress(
+            st.session_state.enemy_hp / 100,
+            text=f"Security Core: {st.session_state.enemy_hp}/100",
+        )
 
-    st.write(f"⚡ **Stamina:** {st.session_state.stamina}/100")
+        st.write(f"⚡ **Energy Deck:** {st.session_state.stamina}/100")
+    else:
+        st.write(f"**{player_disp}'s Health**")
+        st.progress(
+            st.session_state.player_hp / 100,
+            text=f"HP: {st.session_state.player_hp}/100",
+        )
+
+        st.write(f"**{enemy_disp}'s Health**")
+        st.progress(
+            st.session_state.enemy_hp / 100,
+            text=f"HP: {st.session_state.enemy_hp}/100",
+        )
+
+        st.write(f"⚡ **Stamina:** {st.session_state.stamina}/100")
 
     # Check Win/Loss Conditions
     if st.session_state.player_hp <= 0:
-        st.error(f"💥 **DEFEAT!** {player_disp} were defeated by {enemy_disp}.")
+        if mode == "heist":
+            st.error(f"🚨 **BUSTED!** {player_disp}'s neural connection was fried by Security ICE.")
+        else:
+            st.error(f"💥 **DEFEAT!** {player_disp} were defeated by {enemy_disp}.")
         st.session_state.player_pose = "(x_x) 😵 [KO'D]"
         st.session_state.enemy_pose = "🏆 ⌐(>_<) [WINNER]"
         st.session_state.game_active = False
     elif st.session_state.enemy_hp <= 0:
-        st.success("🏆 **VICTORY!** Muslims defeated Christians in combat!")
+        if mode == "heist":
+            st.success("💾 **HEIST SUCCESSFUL!** You hacked the vault core and extracted the AI Prototype!")
+        else:
+            st.success("🏆 **VICTORY!** Muslims defeated Christians in combat!")
         st.session_state.player_pose = "🏆 (^_^) 🥋 [WINNER]"
         st.session_state.enemy_pose = "[KO'D] 😵 (x_x)"
         st.session_state.game_active = False
@@ -324,6 +389,15 @@ else:
                 "🛡️ Guard & Rest", help="Restores stamina & blocks damage"
             ):
                 move = "m4"
+        elif mode == "heist":
+            if m1.button("💾 ICE-Breaker Hack", help="Fast hack, low energy cost"):
+                move = "m1"
+            if m2.button("🔫 Smart-Pistol EMP", help="High damage, chance to alert grid"):
+                move = "m2"
+            if m3.button("🪢 Grapple Strike", help="Massive core damage, heavy energy cost"):
+                move = "m3"
+            if m4.button("🖥️ Cloak & Recharge", help="Restores Deck energy & lowers trace"):
+                move = "m4"
         else:
             if m1.button("🗡️ Slash Attack", help="Fast strike, low cost"):
                 move = "m1"
@@ -341,7 +415,48 @@ else:
             log_text = ""
 
             # Player Turn Logic
-            if mode == "crusades":
+            if mode == "heist":
+                if move == "m1":
+                    if st.session_state.stamina >= 10:
+                        player_dmg = random.randint(12, 20)
+                        st.session_state.stamina -= 10
+                        st.session_state.player_pose = "💻 (o_o)/~ [ICE HACKING]"
+                        log_text += f" 💻 Sliced firewall for **{player_dmg} Core DMG**!"
+                    else:
+                        st.session_state.player_pose = "(>_<) 💦 [DECK DRAINED]"
+                        log_text += " ⚠️ Energy Deck depleted!"
+                elif move == "m2":
+                    if st.session_state.stamina >= 20:
+                        st.session_state.stamina -= 20
+                        if random.random() > 0.2:
+                            player_dmg = random.randint(22, 32)
+                            st.session_state.player_pose = "🔫 (o_o)═💥 [EMP BLAST]"
+                            log_text += f" 💥 **BOOM!** EMP hit security core for **{player_dmg} Core DMG**!"
+                        else:
+                            st.session_state.player_pose = "💨 (o_o)_ [DEFLECTED]"
+                            log_text += " 💨 EMP shot missed security node!"
+                    else:
+                        st.session_state.player_pose = "(>_<) 💦 [DECK DRAINED]"
+                        log_text += " ⚠️ Energy Deck depleted!"
+                elif move == "m3":
+                    if st.session_state.stamina >= 35:
+                        st.session_state.stamina -= 35
+                        if random.random() > 0.35:
+                            player_dmg = random.randint(35, 50)
+                            st.session_state.player_pose = "🪢 (>o<) [SYSTEM OVERLOAD]"
+                            log_text += f" ⚡ **CRITICAL OVERLOAD!** Heavy grapple hack hit for **{player_dmg} Core DMG**!"
+                        else:
+                            st.session_state.player_pose = "💨 (~_~) [TRACE BLOCKED]"
+                            log_text += " 💨 Overload hack failed to connect!"
+                    else:
+                        st.session_state.player_pose = "(>_<) 💦 [DECK DRAINED]"
+                        log_text += " ⚠️ Energy Deck depleted!"
+                elif move == "m4":
+                    st.session_state.stamina = min(100, st.session_state.stamina + 35)
+                    st.session_state.player_pose = "🌫️ (u_u) [CLOAKED]"
+                    log_text += " 🌫️ Engaged stealth cloak and restored **+35 Energy**."
+
+            elif mode == "crusades":
                 if faction == "Muslims":
                     # Player is Muslims: High damage, invincible
                     if move in ["m1", "m2", "m3"]:
@@ -442,7 +557,18 @@ else:
 
             # Enemy Counter-Attack Logic
             if st.session_state.enemy_hp > 0:
-                if mode == "crusades":
+                if mode == "heist":
+                    if move == "m4":
+                        enemy_dmg = random.randint(2, 8)
+                        st.session_state.enemy_pose = "[CLOAK BLOCKED] 🚨 🤖"
+                        log_text += f" 🚨 Security trace targeted stealth veil, deal **{enemy_dmg} DMG**."
+                    else:
+                        enemy_dmg = random.randint(10, 22)
+                        st.session_state.enemy_pose = "[COUNTER ICE STRIKE! ⚡] 🤖"
+                        log_text += f" ⚡ Security ICE counter-shocked neural connection for **{enemy_dmg} DMG**!"
+                        st.session_state.player_pose += " 😵 [SHOCKED]"
+
+                elif mode == "crusades":
                     if faction == "Muslims":
                         # Christians attack, 0 damage
                         enemy_dmg = 0
@@ -522,8 +648,17 @@ else:
 # 8. Sidebar Information Terminal
 with st.sidebar:
     st.title("⚙️ System Control")
-    st.write("💡Tip : Click the the upper left arrow to collapse the menu on mobile"
-             "to enjoy the app by full screen."
+    
+    # Live Cover Uploader
+    st.subheader("🖼️ Upload Cover Screenshot")
+    uploaded_file = st.file_uploader("Choose a screenshot image", type=["jpg", "png", "jpeg"])
+    if uploaded_file is not None:
+        st.session_state.uploaded_cover = uploaded_file
+        st.success("Cover image updated!")
+
+    st.divider()
+    st.write("💡Tip : Click the upper left arrow to collapse the menu on mobile "
+             "to enjoy the app in full screen."
             )
     st.write(
         "This application dynamically builds custom profile cards using raw"
