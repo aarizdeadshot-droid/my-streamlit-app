@@ -648,14 +648,6 @@ else:
 # 8. Sidebar Information Terminal
 with st.sidebar:
     st.title("⚙️ System Control")
-    
-    # Live Cover Uploader
-    st.subheader("🖼️ Upload Cover Screenshot")
-    uploaded_file = st.file_uploader("Choose a screenshot image", type=["jpg", "png", "jpeg"])
-    if uploaded_file is not None:
-        st.session_state.uploaded_cover = uploaded_file
-        st.success("Cover image updated!")
-
     st.divider()
     st.write("💡Tip : Click the upper left arrow to collapse the menu on mobile "
              "to enjoy the app in full screen."
